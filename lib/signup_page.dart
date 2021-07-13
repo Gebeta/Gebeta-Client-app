@@ -138,6 +138,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(15))),
             child: InkWell(
+              onTap: (){
+                  Navigator.pushReplacementNamed(context, '/selectTopics');
+                },
               child: Center(
                 child: Text(
                   "Sign Up",

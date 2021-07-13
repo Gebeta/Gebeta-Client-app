@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: InkWell(
                 onTap: (){
-                  Navigator.pushNamed(context, '/signup');
+                  Navigator.pushReplacementNamed(context, '/signup');
                 },
                 child: Center(
                   child: Text("Sign Up", style: TextStyle(
@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: InkWell(
                 onTap: (){
-                  Navigator.pushNamed(context, '/login');
+                  Navigator.pushReplacementNamed(context, '/login');
                   print("hello i am clicker");
                 },
                 child: Center(

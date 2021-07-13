@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gebeta_food/Screens/home_screen/landing_page.dart';
 import 'package:gebeta_food/home_page.dart';
 import 'package:gebeta_food/login_page.dart';
 import 'package:gebeta_food/signup_page.dart';
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Gebeta Food Delivery',
       theme: ThemeData(
         primaryColor: Color(0xffa43c21),
         fontFamily: "Raleway"
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login': (context)=>LoginPage(),
        '/signup':(context)=>SignUpPage(),
+       '/selectTopics':(context)=>SelectTopicsPage(),
      },
     );
   }
