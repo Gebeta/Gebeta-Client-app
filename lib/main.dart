@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         // brightness: Brightness.dark,
         primaryColor: gsecondaryColor,
-        fontFamily: "Raleway"
+        fontFamily: "Montserrat"
       ),
       home: HomeScreen(),
       // home: MyHomePage(),
