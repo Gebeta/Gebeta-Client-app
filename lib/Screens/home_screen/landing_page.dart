@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gebeta_food/constants.dart';
 
 class SelectTopicsPage extends StatelessWidget {
   const SelectTopicsPage({Key? key}) : super(key: key);
@@ -11,12 +12,12 @@ class SelectTopicsPage extends StatelessWidget {
         //   title: Text("Select"),
         // ),
         body: ListView(
-          children: [
-            Container(
-              child: FilterChipWidget(),
-            ),
-          ],
-        ));
+      children: [
+        Container(
+          child: FilterChipWidget(),
+        ),
+      ],
+    ));
   }
 }
 
@@ -111,13 +112,13 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
     false,
     false,
     false,
-    false, 
-    false, 
-    false, 
-    false, 
-    false, 
-    false, 
-    false, 
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
   ];
 
   Widget _buildChips() {
@@ -126,9 +127,12 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
     for (int i = 0; i < _options.length; i++) {
       FilterChip filterChip = FilterChip(
         label: Text(_options[i]),
-        labelStyle: TextStyle(fontSize: 16, color: Color(0xffcb4d2b)),
+        labelStyle: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: _selected[i] ? whiteColor : gPrimaryColor),
         selected: _selected[i],
-        selectedColor: Color(0xffFBF1EE),
+        selectedColor: gPrimaryColor,
         showCheckmark: false,
         onSelected: (bool isSelected) {
           setState(() {
@@ -154,10 +158,7 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
                   "Select at least three food categories.",
-                  style: TextStyle(
-                    fontSize: 24.0
-                  ),
-                  
+                  style: TextStyle(fontSize: 24.0),
                 ),
               ),
             ),
@@ -180,7 +181,9 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
     }
     if (number >= 3) {
       return ElevatedButton.icon(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushReplacementNamed(context, '/home');
+        },
         label: Text("next"),
         icon: Icon(Icons.navigate_next),
       );
