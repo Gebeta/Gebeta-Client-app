@@ -26,19 +26,88 @@ class _MyHomePageState extends State<MyHomePage>
   Widget _buildSideDrawer(BuildContext context) {
     return Drawer(
       child: Column(
-        children: <Widget>[
-          AppBar(
-            title: Text("choose"),
-            automaticallyImplyLeading: false,
-            // iconTheme: Theme.of(context).p,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            children: <Widget>[
+              UserAccountsDrawerHeader(
+                accountName: Text("Client Name"),
+                accountEmail: Text("Client Email"),
+                currentAccountPicture: CircleAvatar(
+                    backgroundColor:
+                        Theme.of(context).platform == TargetPlatform.iOS
+                            ? Colors.blue
+                            : Colors.white,
+                    child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(width: 2, color: whiteColor),
+                            borderRadius: BorderRadius.circular(50.0)),
+                        child: Image.asset("assets/images/profile.png"))),
+              ),
+              Column(
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.person_outline, color: gsecondaryColor,),
+                    title: Text("Profile"),
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, '/products');
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.settings,color: gsecondaryColor,),
+                    title: Text("Settings"),
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, '/products');
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.shopping_cart,color: gsecondaryColor,),
+                    title: Text("My Cart"),
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, '/products');
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.fastfood_sharp,color: gsecondaryColor,),
+                    title: Text("View All Restaurants"),
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, '/products');
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.logout_rounded,color: gsecondaryColor,),
+                    title: Text("Sign Out"),
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, '/products');
+                    },
+                  ),
+                ],
+              )
+            ],
           ),
-          ListTile(
-            leading: Icon(Icons.shop),
-            title: Text("All Products"),
-            onTap: () {
-              Navigator.pushReplacementNamed(context, '/products');
-            },
-          )
+          Column(
+            children: [
+              Divider(),
+              Column(
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.share,color: gsecondaryColor,),
+                    title: Text("Tell a Friend"),
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, '/products');
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.help_outline_rounded,color: gsecondaryColor,),
+                    title: Text("Help and Feedback"),
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, '/products');
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -50,10 +119,6 @@ class _MyHomePageState extends State<MyHomePage>
       backgroundColor: Color(0xfff9efeb),
       key: _globalKey,
       drawer: _buildSideDrawer(context),
-      // drawer: _buildSideDrawer(context),
-      // appBar: AppBar(
-      //   // leading: IconButton(icon: SvgPicture.asset("assets/icons/menu.svg"),onPressed: (){},),
-      // ),
       body: ListView(
         children: <Widget>[
           Stack(
@@ -94,6 +159,7 @@ class _MyHomePageState extends State<MyHomePage>
                   "Hello there!",
                   style: TextStyle(
                       fontSize: 30.0,
+                      fontFamily: "Raleway",
                       color: whiteColor,
                       fontWeight: FontWeight.bold),
                 ),
@@ -104,6 +170,7 @@ class _MyHomePageState extends State<MyHomePage>
                   "Choose Your Favorite!",
                   style: TextStyle(
                       fontSize: 30.0,
+                      fontFamily: "Raleway",
                       color: whiteColor,
                       fontWeight: FontWeight.bold),
                 ),
@@ -284,7 +351,7 @@ class _MyHomePageState extends State<MyHomePage>
             ],
           ),
           SizedBox(height: 10.0),
-         RestaurantsList(),
+          RestaurantsList(),
           SizedBox(height: 20.0)
         ],
       ),
