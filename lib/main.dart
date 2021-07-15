@@ -21,7 +21,8 @@ class MyApp extends StatelessWidget {
         primaryColor: gsecondaryColor,
         fontFamily: "Raleway"
       ),
-      home: MyHomePage(),
+      home: HomeScreen(),
+      // home: MyHomePage(),
       routes: {
         '/login': (context)=>LoginPage(),
        '/signup':(context)=>SignUpPage(),
