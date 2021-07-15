@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gebeta_food/constants.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -10,9 +11,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool hidePwd = true;
 
-  Widget see_pwd() {
+  Widget seePwd() {
     return hidePwd == true
-        ? Icon(Icons.visibility_off, color: Color(0xffd14e2c))
+        ? Icon(Icons.visibility_off, color: gPrimaryColor)
         : Icon(Icons.visibility);
   }
 
@@ -35,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
               style: TextStyle(
                 fontSize: 32.0,
                 fontWeight: FontWeight.w400,
-                color: Color(0xffd14e2c),
+                color: gPrimaryColor,
               ),
             ),
           ),
@@ -43,13 +44,13 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
             child: TextField(
-              style: TextStyle(fontSize: 17, color: Color(0xffd14e2c)),
+              style: TextStyle(fontSize: 17, color: gPrimaryColor),
               decoration: InputDecoration(
                 hintText: "test@gmail.com",
                 labelText: "Email",
                 labelStyle: TextStyle(
-                    color: Color(0xffd14e2c), fontWeight: FontWeight.w200),
-                hintStyle: TextStyle(color: Color(0xffd14e2c)),
+                    color: gPrimaryColor, fontWeight: FontWeight.w200),
+                hintStyle: TextStyle(color: gPrimaryColor),
               ),
             ),
           ),
@@ -60,18 +61,18 @@ class _LoginPageState extends State<LoginPage> {
               style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xffd14e2c)),
+                  color: gPrimaryColor),
               obscureText: hidePwd,
               decoration: InputDecoration(
                 hintText: "****",
                 suffixIcon: IconButton(
                     onPressed: togglePwdVisibility,
-                    icon: see_pwd(),
-                    color: Color(0xffd14e2c)),
+                    icon: seePwd(),
+                    color: gPrimaryColor),
                 labelText: "Password",
                 labelStyle: TextStyle(
-                    color: Color(0xffd14e2c), fontWeight: FontWeight.w200),
-                hintStyle: TextStyle(color: Color(0xffd14e2c)),
+                    color: gPrimaryColor, fontWeight: FontWeight.w200),
+                hintStyle: TextStyle(color: gPrimaryColor),
               ),
             ),
           ),
@@ -85,11 +86,14 @@ class _LoginPageState extends State<LoginPage> {
             height: 50,
             decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xffD86346), Color(0xffd14e2c)],
+                  colors: [gsecondaryColor, gPrimaryColor],
                   stops: [0, 1],
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(15))),
             child: InkWell(
+              onTap: (){
+                Navigator.pushReplacementNamed(context, '/home');
+              },
               child: Center(
                 child: Text(
                   "Log In",
