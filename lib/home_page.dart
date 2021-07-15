@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'constants.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -27,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
               width: MediaQuery.of(context).size.width*0.8,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xffd14e2c), Color(0xffD86346)],
+                  colors: [gPrimaryColor, gsecondaryColor],
                   stops: [0,1],
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -51,14 +53,14 @@ class _HomeScreenState extends State<HomeScreen> {
               width: MediaQuery.of(context).size.width*0.8,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xffD86346),Color(0xffd14e2c)],
+                  colors: [gsecondaryColor,gPrimaryColor],
                   stops: [0,1],
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(15)),
               ),
               child: InkWell(
                 onTap: (){
-                  Navigator.pushReplacementNamed(context, '/login');
+                  Navigator.pushNamed(context, '/login');
                   print("hello i am clicker");
                 },
                 child: Center(
