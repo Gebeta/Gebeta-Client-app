@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gebeta_food/Screens/home_screen/list_view.dart';
-import 'package:gebeta_food/Screens/home_screen/popular_food.dart';
+// import 'package:gebeta_food/Screens/home_screen/popular_food.dart';
 import 'package:gebeta_food/Screens/home_screen/restaurants_list.dart';
 import 'package:gebeta_food/constants.dart';
 
@@ -47,35 +47,70 @@ class _MyHomePageState extends State<MyHomePage>
               Column(
                 children: [
                   ListTile(
-                    leading: Icon(Icons.person_outline, color: gsecondaryColor,),
+                    leading: Icon(
+                      Icons.person_outline,
+                      color: gsecondaryColor,
+                    ),
                     title: Text("Profile"),
                     onTap: () {
                       Navigator.pushReplacementNamed(context, '/products');
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.settings,color: gsecondaryColor,),
-                    title: Text("Settings"),
-                    onTap: () {
-                      Navigator.pushReplacementNamed(context, '/products');
-                    },
-                  ),
-                  ListTile(
-                    leading: Icon(Icons.shopping_cart,color: gsecondaryColor,),
+                    leading: Icon(
+                      Icons.shopping_cart_outlined,
+                      color: gsecondaryColor,
+                    ),
                     title: Text("My Cart"),
                     onTap: () {
                       Navigator.pushReplacementNamed(context, '/products');
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.fastfood_sharp,color: gsecondaryColor,),
+                    leading: Icon(
+                      Icons.settings_outlined,
+                      color: gsecondaryColor,
+                    ),
+                    title: Text("Settings"),
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, '/products');
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.history_edu_outlined,
+                      color: gsecondaryColor,
+                    ),
+                    title: Text("Orders"),
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, '/products');
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.favorite_border,
+                      color: gsecondaryColor,
+                    ),
+                    title: Text("Favorites"),
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, '/products');
+                    },
+                  ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.fastfood_outlined,
+                      color: gsecondaryColor,
+                    ),
                     title: Text("View All Restaurants"),
                     onTap: () {
                       Navigator.pushReplacementNamed(context, '/products');
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.logout_rounded,color: gsecondaryColor,),
+                    leading: Icon(
+                      Icons.logout_outlined,
+                      color: gsecondaryColor,
+                    ),
                     title: Text("Sign Out"),
                     onTap: () {
                       Navigator.pushReplacementNamed(context, '/products');
@@ -91,14 +126,20 @@ class _MyHomePageState extends State<MyHomePage>
               Column(
                 children: [
                   ListTile(
-                    leading: Icon(Icons.share,color: gsecondaryColor,),
+                    leading: Icon(
+                      Icons.share_outlined,
+                      color: gsecondaryColor,
+                    ),
                     title: Text("Tell a Friend"),
                     onTap: () {
                       Navigator.pushReplacementNamed(context, '/products');
                     },
                   ),
                   ListTile(
-                    leading: Icon(Icons.help_outline_rounded,color: gsecondaryColor,),
+                    leading: Icon(
+                      Icons.help_outline_rounded,
+                      color: gsecondaryColor,
+                    ),
                     title: Text("Help and Feedback"),
                     onTap: () {
                       Navigator.pushReplacementNamed(context, '/products');
