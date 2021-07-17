@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gebeta_food/Screens/restaurant/restaurant.dart';
+import 'package:gebeta_food/Screens/food%20/food.dart';
+// import 'package:gebeta_food/Screens/restaurant/restaurant.dart';
 import 'package:gebeta_food/constants.dart';
-// import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class PopularFoodListView extends StatefulWidget {
-
   @override
   _PopularFoodListViewState createState() => _PopularFoodListViewState();
 }
@@ -26,14 +25,14 @@ class _PopularFoodListViewState extends State<PopularFoodListView> {
   Widget _buildFoodCard(
       String img, String foodName, double price, double rating) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         print("the whole thing clicked");
         Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => RestaurantPage()),
-  );
+          context,
+          MaterialPageRoute(
+              builder: (context) => new FoodDetailPage(foodName, img, price)),
+        );
       },
-      
       child: Container(
         margin: EdgeInsets.all(15.0),
         decoration: BoxDecoration(
@@ -62,7 +61,10 @@ class _PopularFoodListViewState extends State<PopularFoodListView> {
               ),
             ),
             Container(
-              padding: EdgeInsets.only(left: 15.0, top: 5.0, ),
+              padding: EdgeInsets.only(
+                left: 15.0,
+                top: 5.0,
+              ),
               child: Text(
                 foodName,
                 style: TextStyle(
@@ -105,7 +107,6 @@ class _PopularFoodListViewState extends State<PopularFoodListView> {
                 )
               ],
             ),
-            
           ],
         ),
       ),
