@@ -122,21 +122,24 @@ class ProfileScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(7.0),
                   boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      )
-                    ],
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    )
+                  ],
                   color: whiteColor,
                 ),
                 margin: EdgeInsets.all(15),
                 child: Column(
                   children: [
                     profileMenu(
+                        context, Icons.change_circle, "Change Password"),
+                    profileMenu(
                         context, Icons.payment_sharp, "Payment Methods"),
-                    profileMenu(context, Icons.location_on_outlined, "Location"),
+                    profileMenu(
+                        context, Icons.location_on_outlined, "Location"),
                     profileMenu(context, Icons.access_time, "My Orders"),
                   ],
                 ),
@@ -145,13 +148,13 @@ class ProfileScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(7.0),
                   boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      )
-                    ],
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: Offset(0, 3),
+                    )
+                  ],
                   color: whiteColor,
                 ),
                 margin: EdgeInsets.all(15),
