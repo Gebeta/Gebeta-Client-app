@@ -35,12 +35,13 @@ class _PopularFoodListViewState extends State<PopularFoodListView> {
       },
       child: Container(
         margin: EdgeInsets.all(15.0),
+        padding: EdgeInsets.only(top: 5,left: 5,right: 5),
         decoration: BoxDecoration(
           color: whiteColor,
           borderRadius: BorderRadius.circular(7.0),
           boxShadow: [
             BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
+                color: gTextLightColor.withOpacity(0.2),
                 blurRadius: 3.0,
                 spreadRadius: 3.0)
           ],
@@ -77,35 +78,26 @@ class _PopularFoodListViewState extends State<PopularFoodListView> {
             SizedBox(
               height: 5.0,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 15.0),
-                  child: Text(
+            Container(
+              color: Colors.lightBlue,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
                     "$price ETB",
                     style: TextStyle(
                         fontFamily: "Montserrat",
                         color: gsecondaryColor,
                         fontWeight: FontWeight.bold),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: ElevatedButton(
+                  IconButton(
                     onPressed: () {},
-                    child: Icon(Icons.add),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(gPrimaryColor),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50.0),
-                        ),
-                      ),
-                    ),
+                    icon: Icon(Icons.add_circle),
+                    color: gsecondaryColor,
+                    iconSize: 35,
                   ),
-                )
-              ],
+                ],
+              ),
             ),
           ],
         ),

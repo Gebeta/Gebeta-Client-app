@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("Profile"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/products');
+                      Navigator.pushReplacementNamed(context, '/profile');
                     },
                   ),
                   ListTile(
@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("My Cart"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/products');
+                      Navigator.pushReplacementNamed(context, '/my_cart');
                     },
                   ),
                   ListTile(
@@ -73,7 +73,7 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("Settings"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/products');
+                      Navigator.pushReplacementNamed(context, '/profile');
                     },
                   ),
                   ListTile(
@@ -83,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("Orders"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/products');
+                      Navigator.pushReplacementNamed(context, '/my_orders');
                     },
                   ),
                   ListTile(
@@ -93,17 +93,17 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("Favorites"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/products');
+                      Navigator.pushReplacementNamed(context, '/my_favorites');
                     },
                   ),
                   ListTile(
                     leading: Icon(
-                      Icons.fastfood_outlined,
+                      Icons.restaurant_outlined,
                       color: gsecondaryColor,
                     ),
                     title: Text("View All Restaurants"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/products');
+                      Navigator.pushReplacementNamed(context, '/restaurants');
                     },
                   ),
                   ListTile(
@@ -113,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("Sign Out"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/products');
+                      Navigator.pushReplacementNamed(context, '/login');
                     },
                   ),
                 ],
@@ -132,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("Tell a Friend"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/products');
+                      Navigator.pushReplacementNamed(context, '/'); // undefined route
                     },
                   ),
                   ListTile(
@@ -142,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("Help and Feedback"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/products');
+                      Navigator.pushReplacementNamed(context, '/'); // undefined route
                     },
                   ),
                 ],
@@ -208,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage>
               Padding(
                 padding: EdgeInsets.only(top: 95.0, left: 15.0),
                 child: Text(
-                  "Choose Your Favorite!",
+                  "Grab Your Favorite Meal!",
                   style: TextStyle(
                       fontSize: 30.0,
                       fontFamily: "Raleway",

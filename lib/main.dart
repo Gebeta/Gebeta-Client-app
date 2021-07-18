@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gebeta_food/Screens/home_screen/home_page.dart';
 import 'package:gebeta_food/Screens/home_screen/landing_page.dart';
+import 'package:gebeta_food/Screens/user_profile/edit_profile.dart';
+import 'package:gebeta_food/Screens/user_profile/profile_screen.dart';
 import 'package:gebeta_food/constants.dart';
 import 'package:gebeta_food/home_page.dart';
 import 'Screens/auth_screen/login_page.dart';
@@ -21,12 +23,14 @@ class MyApp extends StatelessWidget {
         primaryColor: gsecondaryColor,
         fontFamily: "Montserrat"
       ),
-      home: HomeScreen(),
-      // home: MyHomePage(),
+      home: EditProfilePage(),
+      // home: HomeScreen(),
       routes: {
         '/login': (context)=>LoginPage(),
        '/signup':(context)=>SignUpPage(),
        '/home':(context)=>MyHomePage(),
+       '/profile':(context)=>ProfileScreen(),
+       '/edit_profile':(context)=>EditProfilePage(),
        '/selectTopics':(context)=>SelectTopicsPage(),
      },
     );
