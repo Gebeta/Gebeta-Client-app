@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gebeta_food/Screens/widgets/form_input/button.dart';
+import 'package:gebeta_food/Screens/widgets/others/logo.dart';
+import 'package:gebeta_food/Screens/widgets/others/text.dart';
 import 'package:gebeta_food/constants.dart';
 import 'package:gebeta_food/scoped-models/user.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:scoped_model/scoped_model.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -48,185 +52,183 @@ class _SignUpPageState extends State<SignUpPage> {
         body: ListView(
           padding: EdgeInsets.all(10.0),
           children: <Widget>[
-            // SizedBox(height: 20),
-            Container(
-              padding: EdgeInsets.all(10),
-              child: Image.asset('assets/images/logo.png'),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 10.0),
-              child: Text(
-                "Sign Up",
-                style: TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.w400,
-                  color: gPrimaryColor,
-                ),
-              ),
-            ),
+            Logo(),
+            Center(child: TextWidget("Sign Up")),
             SizedBox(height: 2),
             Form(
               key: _formKey,
               child: Column(
                 children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
-                    child: TextFormField(
-                      style: TextStyle(fontSize: 17, color: gPrimaryColor),
-                      decoration: InputDecoration(
-                        hintText: "Jhon",
-                        labelText: "First Name",
-                        labelStyle: TextStyle(
-                            color: gPrimaryColor, fontWeight: FontWeight.w200),
-                        hintStyle: TextStyle(color: gPrimaryColor),
-                      ),
-                      validator: (value) {
-                        if (value.toString().isEmpty) {
-                          return 'First Name can\'t be Empty';
-                        }
-                      },
-                      onChanged: (String value) {
-                        _formData['first_name'] = value;
-                      },
-                    ),
-                  ),
+                  _buildFirstNameField(),
                   SizedBox(height: 5.0),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
-                    child: TextFormField(
-                      style: TextStyle(fontSize: 17, color: gPrimaryColor),
-                      decoration: InputDecoration(
-                        hintText: "Doe",
-                        labelText: "Last Name",
-                        labelStyle: TextStyle(
-                            color: gPrimaryColor, fontWeight: FontWeight.w200),
-                        hintStyle: TextStyle(color: gPrimaryColor),
-                      ),
-                      validator: (value) {
-                        if (value.toString().isEmpty) {
-                          return 'Last Name can\'t be Empty';
-                        }
-                      },
-                      onChanged: (String value) {
-                        _formData['last_name'] = value;
-                      },
-                    ),
-                  ),
+                  _buildLastNameField(),
                   SizedBox(height: 5.0),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
-                    child: TextFormField(
-                      style: TextStyle(fontSize: 17, color: gPrimaryColor),
-                      decoration: InputDecoration(
-                        hintText: "jhondoe@gmail.com",
-                        labelText: "Email",
-                        labelStyle: TextStyle(
-                            color: gPrimaryColor, fontWeight: FontWeight.w200),
-                        hintStyle: TextStyle(color: gPrimaryColor),
-                      ),
-                      validator: (value) {
-                        if (value.toString().isEmpty ||
-                            !RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
-                                .hasMatch(value.toString())) {
-                          return 'Invalid Email';
-                        }
-                      },
-                      onChanged: (String value) {
-                        _formData['email'] = value;
-                      },
-                    ),
-                  ),
+                  _buildEmailField(),
                   SizedBox(height: 10.0),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
-                    child: TextFormField(
-                      style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                          color: gPrimaryColor),
-                      obscureText: hidePwd,
-                      validator: (value) {
-                        if (value.toString().isEmpty ||
-                            value.toString().length < 6) {
-                          return 'Invalid Password';
-                        }
-                      },
-                      onChanged: (String value) {
-                        _formData['password'] = value;
-                      },
-                      controller: _passwordTextController,
-                      decoration: InputDecoration(
-                        hintText: "****",
-                        suffixIcon: IconButton(
-                            onPressed: togglePwdVisibility,
-                            icon: seePwd(),
-                            color: gPrimaryColor),
-                        labelText: "Password",
-                        labelStyle: TextStyle(
-                            color: gPrimaryColor, fontWeight: FontWeight.w200),
-                        hintStyle: TextStyle(color: gPrimaryColor),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
-                    child: TextFormField(
-                      style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                          color: gPrimaryColor),
-                      obscureText: hidePwd,
-                      validator: (value) {
-                        if (_passwordTextController.text != value) {
-                          return 'Passwords do not match.';
-                        }
-                      },
-                      decoration: InputDecoration(
-                        hintText: "****",
-                        suffixIcon: IconButton(
-                            onPressed: togglePwdVisibility,
-                            icon: seePwd(),
-                            color: gPrimaryColor),
-                        labelText: "Confirm Password",
-                        labelStyle: TextStyle(
-                            color: gPrimaryColor, fontWeight: FontWeight.w200),
-                        hintStyle: TextStyle(color: gPrimaryColor),
-                      ),
-                    ),
-                  ),
+                  _buildPasswordField(),
+                  _buildConfirmPasswordField(),
                   SizedBox(height: 20),
                   ScopedModelDescendant<UserModel>(
-                      builder: (context, Widget child, UserModel moder) {
-                    return Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [gsecondaryColor, gPrimaryColor],
-                          stops: [0, 1],
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(15),
-                        ),
-                      ),
-                      child: InkWell(
-                        onTap: () => _submitForm(model.signUp),
-                        child: Center(
-                          child: Text(
-                            "Sign Up",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 15),
+                    builder: (context, Widget child, UserModel moder) {
+                      return Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [gsecondaryColor, gPrimaryColor],
+                            stops: [0, 1],
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(15),
                           ),
                         ),
-                      ),
-                    );
-                  }),
+                        child: InkWell(
+                            onTap: () => _submitForm(model.signUp),
+                            child: ButtonWidget(() {}, "Sign Up")),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Container _buildConfirmPasswordField() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+      child: TextFormField(
+        style: TextStyle(
+            fontSize: 17, fontWeight: FontWeight.w600, color: gPrimaryColor),
+        obscureText: hidePwd,
+        validator: (value) {
+          if (_passwordTextController.text != value) {
+            return 'Passwords do not match.';
+          }
+        },
+        decoration: InputDecoration(
+          hintText: "****",
+          suffixIcon: IconButton(
+              onPressed: togglePwdVisibility,
+              icon: seePwd(),
+              color: gPrimaryColor),
+          labelText: "Confirm Password",
+          labelStyle:
+              TextStyle(color: gPrimaryColor, fontWeight: FontWeight.w600),
+          hintStyle:
+              TextStyle(color: gPrimaryColor, fontWeight: FontWeight.w100),
+        ),
+      ),
+    );
+  }
+
+  Container _buildPasswordField() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+      child: TextFormField(
+        style: TextStyle(
+            fontSize: 17, fontWeight: FontWeight.w600, color: gPrimaryColor),
+        obscureText: hidePwd,
+        validator: (value) {
+          if (value.toString().isEmpty || value.toString().length < 6) {
+            return 'Invalid Password';
+          }
+        },
+        onChanged: (String value) {
+          _formData['password'] = value;
+        },
+        controller: _passwordTextController,
+        decoration: InputDecoration(
+          hintText: "****",
+          suffixIcon: IconButton(
+              onPressed: togglePwdVisibility,
+              icon: seePwd(),
+              color: gPrimaryColor),
+          labelText: "Password",
+          labelStyle:
+              TextStyle(color: gPrimaryColor, fontWeight: FontWeight.w600),
+          hintStyle:
+              TextStyle(color: gPrimaryColor, fontWeight: FontWeight.w100),
+        ),
+      ),
+    );
+  }
+
+  Container _buildEmailField() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+      child: TextFormField(
+        style: TextStyle(fontSize: 17, color: gPrimaryColor),
+        decoration: InputDecoration(
+          hintText: "jhondoe@gmail.com",
+          labelText: "Email",
+          labelStyle:
+              TextStyle(color: gPrimaryColor, fontWeight: FontWeight.w600),
+          hintStyle:
+              TextStyle(color: gPrimaryColor, fontWeight: FontWeight.w100),
+        ),
+        validator: (value) {
+          if (value.toString().isEmpty ||
+              !RegExp(r"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+                  .hasMatch(value.toString())) {
+            return 'Invalid Email';
+          }
+        },
+        onChanged: (String value) {
+          _formData['email'] = value;
+        },
+      ),
+    );
+  }
+
+  Container _buildLastNameField() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+      child: TextFormField(
+        style: TextStyle(fontSize: 17, color: gPrimaryColor),
+        decoration: InputDecoration(
+          hintText: "Doe",
+          labelText: "Last Name",
+          labelStyle:
+              TextStyle(color: gPrimaryColor, fontWeight: FontWeight.w600),
+          hintStyle:
+              TextStyle(color: gPrimaryColor, fontWeight: FontWeight.w100),
+        ),
+        validator: (value) {
+          if (value.toString().isEmpty) {
+            return 'Last Name can\'t be Empty';
+          }
+        },
+        onChanged: (String value) {
+          _formData['last_name'] = value;
+        },
+      ),
+    );
+  }
+
+  Container _buildFirstNameField() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+      child: TextFormField(
+        style: TextStyle(fontSize: 17, color: gPrimaryColor),
+        decoration: InputDecoration(
+          hintText: "Jhon",
+          labelText: "First Name",
+          labelStyle:
+              TextStyle(color: gPrimaryColor, fontWeight: FontWeight.w600),
+          hintStyle:
+              TextStyle(color: gPrimaryColor, fontWeight: FontWeight.w100),
+        ),
+        validator: (value) {
+          if (value.toString().isEmpty) {
+            return 'First Name can\'t be Empty';
+          }
+        },
+        onChanged: (String value) {
+          _formData['first_name'] = value;
+        },
       ),
     );
   }

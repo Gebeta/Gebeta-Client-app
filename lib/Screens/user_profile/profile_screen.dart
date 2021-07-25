@@ -167,7 +167,7 @@ class ProfileScreen extends StatelessWidget {
                         context, Icons.people_outlined, "Invite Friends"),
                     profileMenu(
                         context, Icons.rate_review_outlined, "Rate app"),
-                    profileMenu(context, Icons.developer_board, "About Us"),
+                    profileMenu(context, Icons.info_outline , "About Us"),
                   ],
                 ),
               ),

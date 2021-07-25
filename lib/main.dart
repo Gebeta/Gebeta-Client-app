@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gebeta_food/Screens/auth_screen/phone.dart';
+import 'package:gebeta_food/Screens/cart_screen/cart.dart';
 import 'package:gebeta_food/Screens/home_screen/home_page.dart';
 import 'package:gebeta_food/Screens/home_screen/landing_page.dart';
+import 'package:gebeta_food/Screens/orders/orders.dart';
+import 'package:gebeta_food/Screens/restaurant/restaurants.dart';
 import 'package:gebeta_food/Screens/user_profile/edit_profile.dart';
 import 'package:gebeta_food/Screens/user_profile/profile_screen.dart';
 import 'package:gebeta_food/constants.dart';
@@ -23,15 +27,19 @@ class MyApp extends StatelessWidget {
         primaryColor: gsecondaryColor,
         fontFamily: "Montserrat"
       ),
-      home: EditProfilePage(),
+      home: HomeScreen(),
       // home: HomeScreen(),
       routes: {
         '/login': (context)=>LoginPage(),
        '/signup':(context)=>SignUpPage(),
        '/home':(context)=>MyHomePage(),
        '/profile':(context)=>ProfileScreen(),
+       '/restaurants':(context)=>AllRestaurantsPage(),
        '/edit_profile':(context)=>EditProfilePage(),
        '/selectTopics':(context)=>SelectTopicsPage(),
+       '/my_cart':(context)=>MyCartPage(),
+       '/my_orders': (context)=>AllOrdersScreen(),
+       '/phone_ver': (context)=>PhoneVerification(),
      },
     );
   }

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:gebeta_food/constants.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class FoodDetailPage extends StatefulWidget {
-  String foodName;
-  String img;
-  double price;
+  final String foodName;
+  final String img;
+  final double price;
 
   FoodDetailPage(this.foodName, this.img, this.price);
 

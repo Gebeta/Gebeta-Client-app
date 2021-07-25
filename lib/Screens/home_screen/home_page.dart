@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gebeta_food/Screens/home_screen/list_view.dart';
+import 'package:gebeta_food/Screens/home_screen/popular_food.dart';
 // import 'package:gebeta_food/Screens/home_screen/popular_food.dart';
 import 'package:gebeta_food/Screens/home_screen/restaurants_list.dart';
 import 'package:gebeta_food/constants.dart';
@@ -132,7 +133,8 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("Tell a Friend"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/'); // undefined route
+                      Navigator.pushReplacementNamed(
+                          context, '/'); // undefined route
                     },
                   ),
                   ListTile(
@@ -142,7 +144,8 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("Help and Feedback"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/'); // undefined route
+                      Navigator.pushReplacementNamed(
+                          context, '/'); // undefined route
                     },
                   ),
                 ],
@@ -157,6 +160,31 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            _globalKey.currentState!.openDrawer();
+            print("clicked");
+          },
+          icon: SvgPicture.asset('assets/icons/menu.svg'),
+        ),
+        title: Text(
+          "Gebeta Delivery",
+          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 25),
+        ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                _globalKey.currentState!.openDrawer();
+                print("clicked");
+              },
+              icon: Icon(Icons.shopping_cart_outlined)),
+          SizedBox(
+            width: 10,
+          ),
+        ],
+      ),
       backgroundColor: Color(0xfff9efeb),
       key: _globalKey,
       drawer: _buildSideDrawer(context),
@@ -165,37 +193,17 @@ class _MyHomePageState extends State<MyHomePage>
           Stack(
             children: <Widget>[
               Container(
-                height: 250,
-                decoration: BoxDecoration(color: gPrimaryColor),
+                height: 190,
+                decoration: BoxDecoration(
+                  color: gPrimaryColor,
+                ),
               ),
               Container(
-                height: 185.0,
+                height: 135.0,
                 decoration: BoxDecoration(color: gsecondaryColor),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 15.0, top: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          _globalKey.currentState!.openDrawer();
-                          print("clicked");
-                        },
-                        icon: SvgPicture.asset('assets/icons/menu.svg')),
-                    Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 3, color: whiteColor),
-                          borderRadius: BorderRadius.circular(50.0)),
-                      child: CircleAvatar(
-                        child: Image.asset("assets/images/profile.png"),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 55.0, left: 15.0),
+                padding: EdgeInsets.only(left: 15.0),
                 child: Text(
                   "Hello there!",
                   style: TextStyle(
@@ -206,7 +214,7 @@ class _MyHomePageState extends State<MyHomePage>
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 95.0, left: 15.0),
+                padding: EdgeInsets.only(top: 45.0, left: 15.0),
                 child: Text(
                   "Grab Your Favorite Meal!",
                   style: TextStyle(
@@ -217,25 +225,31 @@ class _MyHomePageState extends State<MyHomePage>
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 150, left: 15.0, right: 15.0),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: whiteColor,
-                    borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                  ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      // contentPadding: EdgeInsets.only(top:14.0),
-                      hintText: "search Your favourite food item",
-                      hintStyle: TextStyle(color: ksecondaryColor),
-                      icon: Icon(
-                        Icons.search,
-                        color: gPrimaryColor,
+                padding: EdgeInsets.only(top: 105, left: 15.0, right: 15.0),
+                child: Row(
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                      ),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          // contentPadding: EdgeInsets.only(top:14.0),
+                          hintText: "search Your favourite food item",
+                          hintStyle: TextStyle(color: ksecondaryColor),
+                          icon: Icon(
+                            Icons.search,
+                            color: gPrimaryColor,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    IconButton(onPressed: (){}, icon: Icon(Icons.filter))
+                  ],
                 ),
               )
             ],
@@ -248,9 +262,6 @@ class _MyHomePageState extends State<MyHomePage>
             indicatorColor: gPrimaryColor,
             indicatorSize: TabBarIndicatorSize.label,
             indicatorWeight: 4.0,
-            // indicator: BoxDecoration(
-            //     borderRadius: BorderRadius.circular(20), // Creates border
-            //     color: gPrimaryColor),
             isScrollable: true,
             labelColor: Colors.black,
             labelStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -317,7 +328,7 @@ class _MyHomePageState extends State<MyHomePage>
             height: 10.0,
           ),
           Container(
-            height: MediaQuery.of(context).size.height - 520,
+            height: MediaQuery.of(context).size.height * 0.33,
             child: TabBarView(
               children: <Widget>[
                 new PopularFoodListView(),
@@ -331,37 +342,38 @@ class _MyHomePageState extends State<MyHomePage>
             ),
           ),
           SizedBox(height: 10.0),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     Padding(
-          //       padding: EdgeInsets.only(left: 15.0),
-          //       child: Text(
-          //         "Popular Dishes",
-          //         style: TextStyle(
-          //             fontFamily: "Montserrat",
-          //             fontSize: 17.0,
-          //             color: gTextLightColor),
-          //       ),
-          //     ),
-          //     Padding(
-          //       padding: const EdgeInsets.only(right: 15.0),
-          //       child: TextButton(
-          //         child: Text(
-          //           "View All",
-          //           style: TextStyle(
-          //             color: gPrimaryColor,
-          //             fontSize: 14,
-          //             fontFamily: "Montserrat",
-          //           ),
-          //         ),
-          //         onPressed: () {},
-          //       ),
-          //     )
-          //   ],
-          // ),
-          // SizedBox(height: 10.0),
-          // PopularTodayList(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 15.0),
+                child: Text(
+                  "RECOMMENDATiONS",
+                  style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontSize: 17.0,
+                      color: gTextLightColor),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 15.0),
+                child: TextButton(
+                  child: Text(
+                    "View All",
+                    style: TextStyle(
+                      color: gPrimaryColor,
+                      fontSize: 14,
+                      fontFamily: "Montserrat",
+                    ),
+                  ),
+                  onPressed: () {},
+                ),
+              )
+            ],
+          ),
+          
+          Recommendations(),
+          SizedBox(height: 10.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -386,12 +398,13 @@ class _MyHomePageState extends State<MyHomePage>
                       fontFamily: "Montserrat",
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/restaurants");
+                  },
                 ),
               )
             ],
           ),
-          SizedBox(height: 10.0),
           RestaurantsList(),
           SizedBox(height: 20.0)
         ],

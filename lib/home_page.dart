@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gebeta_food/Screens/widgets/others/logo.dart';
 
 import 'constants.dart';
 
@@ -18,11 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           SizedBox(height: 100,),
-          Container(
-            padding: EdgeInsets.all(30),
-            // width: 600,
-            child: Image.asset('assets/images/logo.png'),
-          ),
+          Logo(),
           SizedBox(height: 180,),
           Container(
               height: 50,
@@ -36,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               child: InkWell(
                 onTap: (){
-                  Navigator.pushReplacementNamed(context, '/signup');
+                  Navigator.pushNamed(context, '/phone_ver');
                 },
                 child: Center(
                   child: Text("Sign Up", style: TextStyle(
@@ -61,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: InkWell(
                 onTap: (){
                   Navigator.pushNamed(context, '/login');
-                  print("hello i am clicker");
+                  print("Log in clicked");
                 },
                 child: Center(
                   child: Text("Log In", style: TextStyle(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gebeta_food/Screens/home_screen/restaurants_list.dart';
 
-import '../../constants.dart';
 
 class AllRestaurantsPage extends StatelessWidget {
   const AllRestaurantsPage({Key? key}) : super(key: key);

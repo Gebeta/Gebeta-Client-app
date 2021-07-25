@@ -1,117 +1,103 @@
 import 'package:flutter/material.dart';
+import 'package:gebeta_food/Screens/food%20/food.dart';
 import 'package:gebeta_food/constants.dart';
 // import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class PopularTodayList extends StatefulWidget {
+class Recommendations extends StatefulWidget {
 
   @override
-  _PopularTodayListState createState() => _PopularTodayListState();
+  _RecommendationsState createState() => _RecommendationsState();
 }
 
-class _PopularTodayListState extends State<PopularTodayList> {
+class _RecommendationsState extends State<Recommendations> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      scrollDirection: Axis.horizontal,
-      children: <Widget>[
-        _buildFoodCard("assets/images/burger.png", "Burger", 80.0, 5),
-        _buildFoodCard("assets/images/burger.png", "Burger", 80.0, 5),
-        _buildFoodCard("assets/images/burger.png", "Burger", 80.0, 5),
-      ],
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.33,
+      child: ListView(
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        children: <Widget>[
+          _buildFoodCard("assets/images/burger.png", "Burger", 80.0, 5),
+          _buildFoodCard("assets/images/burger.png", "Burger", 80.0, 5),
+          _buildFoodCard("assets/images/burger.png", "Burger", 80.0, 5),
+        ],
+      ),
     );
   }
 
   Widget _buildFoodCard(
       String img, String foodName, double price, double rating) {
-    return Container(
-      height: 300,
-      margin: EdgeInsets.all(15.0),
-      decoration: BoxDecoration(
-        color: whiteColor,
-        borderRadius: BorderRadius.circular(7.0),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              blurRadius: 3.0,
-              spreadRadius: 3.0)
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(30.0),
-              child: Image.asset(
-                img,
-                fit: BoxFit.cover,
-                height: 130,
-                width: 130,
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 15.0, top: 5.0, ),
-            child: Text(
-              foodName,
-              style: TextStyle(
-                fontFamily: "Montserrat",
-                fontSize: 16.0,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 5.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 15.0),
-                child: Text(
-                  "$price ETB",
-                  style: TextStyle(
-                      fontFamily: "Montserrat",
-                      color: gsecondaryColor,
-                      fontWeight: FontWeight.bold),
+    return InkWell(
+      onTap: () {
+        print("the whole thing clicked");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => new FoodDetailPage(foodName, img, price)),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.all(15.0),
+        decoration: BoxDecoration(
+          color: whiteColor,
+          borderRadius: BorderRadius.circular(7.0),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                blurRadius: 3.0,
+                spreadRadius: 3.0)
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30.0),
+                child: Image.asset(
+                  img,
+                  fit: BoxFit.cover,
+                  height: 120,
+                  width: 130,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: ElevatedButton(
-                  onPressed: () {},
-                  child: Icon(Icons.add),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(gPrimaryColor),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                    ),
+            ),
+            Container(
+              padding: EdgeInsets.only(top: 10.0, ),
+              child: Text(
+                foodName,
+                style: TextStyle(
+                  fontFamily: "Montserrat",
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 15.0),
+                  child: Text(
+                    "$price ETB",
+                    style: TextStyle(
+                        fontFamily: "Montserrat",
+                        color: gsecondaryColor,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
-              )
-            ],
-          ),
-          // Container(
-          //   child: Padding(
-          //     padding: const EdgeInsets.only(left: 15),
-          //     child: RatingBarIndicator(
-          //       rating: rating,
-          //       itemBuilder: (context, index) => Icon(
-          //         Icons.star,
-          //         color: Colors.amber,
-          //       ),
-          //       itemCount: 5,
-          //       itemSize: 17.0,
-
-          //     ),
-          //   ),
-          // )
-        ],
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.add_circle),
+                  color: gsecondaryColor,
+                  iconSize: 35,
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
