@@ -16,6 +16,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late TabController tabController;
 
   @override
@@ -226,30 +227,23 @@ class _MyHomePageState extends State<MyHomePage>
               ),
               Padding(
                 padding: EdgeInsets.only(top: 105, left: 15.0, right: 15.0),
-                child: Row(
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: whiteColor,
-                        borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                      ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          // contentPadding: EdgeInsets.only(top:14.0),
-                          hintText: "search Your favourite food item",
-                          hintStyle: TextStyle(color: ksecondaryColor),
-                          icon: Icon(
-                            Icons.search,
-                            color: gPrimaryColor,
-                          ),
+                child: Form(
+                  key: _formKey,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10.0, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: whiteColor,
+                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
                         ),
+                        child: _buildSearchTextField(),
                       ),
-                    ),
-                    IconButton(onPressed: (){}, icon: Icon(Icons.filter))
-                  ],
+                      IconButton(onPressed: () {}, icon: Icon(Icons.filter))
+                    ],
+                  ),
                 ),
               )
             ],
@@ -268,59 +262,13 @@ class _MyHomePageState extends State<MyHomePage>
             unselectedLabelColor: ksecondaryColor,
             unselectedLabelStyle: TextStyle(fontSize: 12),
             tabs: [
+              Tab(child: _buildTab("BURGER")),
+              Tab(child: _buildTab("PIZZA")),
+              Tab(child: _buildTab("DESSERT")),
+              Tab(child: _buildTab("DRINKS")),
+              Tab(child: _buildTab("NOODLES")),
               Tab(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "BURGER",
-                    style: TextStyle(fontSize: 15.0),
-                  ),
-                ),
-              ),
-              Tab(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "PIZZA",
-                    style: TextStyle(fontSize: 15.0),
-                  ),
-                ),
-              ),
-              Tab(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "DESERT",
-                    style: TextStyle(fontSize: 15.0),
-                  ),
-                ),
-              ),
-              Tab(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "DRINKS",
-                    style: TextStyle(fontSize: 15.0),
-                  ),
-                ),
-              ),
-              Tab(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "NOODLES",
-                    style: TextStyle(fontSize: 15.0),
-                  ),
-                ),
-              ),
-              Tab(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "CHICKEN",
-                    style: TextStyle(fontSize: 15.0),
-                  ),
-                ),
+                child: _buildTab("CHICKEN"),
               )
             ],
           ),
@@ -345,69 +293,76 @@ class _MyHomePageState extends State<MyHomePage>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
-                padding: EdgeInsets.only(left: 15.0),
-                child: Text(
-                  "RECOMMENDATiONS",
-                  style: TextStyle(
-                      fontFamily: "Montserrat",
-                      fontSize: 17.0,
-                      color: gTextLightColor),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 15.0),
-                child: TextButton(
-                  child: Text(
-                    "View All",
-                    style: TextStyle(
-                      color: gPrimaryColor,
-                      fontSize: 14,
-                      fontFamily: "Montserrat",
-                    ),
-                  ),
-                  onPressed: () {},
-                ),
-              )
+              _buildHeadingTextWidget("RECOMMENDATiONS"),
+              _buildViewAllTextWidget("/foods")
             ],
           ),
-          
           Recommendations(),
           SizedBox(height: 10.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Padding(
-                padding: EdgeInsets.only(left: 15.0),
-                child: Text(
-                  "TOP RESTAURANTS",
-                  style: TextStyle(
-                      fontFamily: "Montserrat",
-                      fontSize: 17.0,
-                      color: gTextLightColor),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 15.0),
-                child: TextButton(
-                  child: Text(
-                    "View All",
-                    style: TextStyle(
-                      color: gPrimaryColor,
-                      fontSize: 14,
-                      fontFamily: "Montserrat",
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/restaurants");
-                  },
-                ),
-              )
+              _buildHeadingTextWidget("TOP RESTAURANTS"),
+              _buildViewAllTextWidget("/restaurants")
             ],
           ),
           RestaurantsList(),
           SizedBox(height: 20.0)
         ],
+      ),
+    );
+  }
+
+  TextFormField _buildSearchTextField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        hintText: "search Your favourite food item",
+        hintStyle: TextStyle(color: ksecondaryColor),
+        icon: Icon(
+          Icons.search,
+          color: gPrimaryColor,
+        ),
+      ),
+    );
+  }
+
+  Padding _buildTab(String tabName) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        tabName,
+        style: TextStyle(fontSize: 15.0),
+      ),
+    );
+  }
+
+  Padding _buildHeadingTextWidget(String heading) {
+    return Padding(
+      padding: EdgeInsets.only(left: 15.0),
+      child: Text(
+        heading,
+        style: TextStyle(
+            fontFamily: "Montserrat", fontSize: 17.0, color: gTextLightColor),
+      ),
+    );
+  }
+
+  Padding _buildViewAllTextWidget(String route) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 15.0),
+      child: TextButton(
+        child: Text(
+          "View All",
+          style: TextStyle(
+            color: gPrimaryColor,
+            fontSize: 14,
+            fontFamily: "Montserrat",
+          ),
+        ),
+        onPressed: () {
+          Navigator.pushNamed(context, route);
+        },
       ),
     );
   }
