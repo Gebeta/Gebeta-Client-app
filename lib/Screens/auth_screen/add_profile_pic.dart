@@ -100,38 +100,57 @@ class _AddProfilePicScreenState extends State<AddProfilePicScreen> {
           ),
           Container(
             width: MediaQuery.of(context).size.width * 0.3,
-              height: 50,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [gsecondaryColor, gPrimaryColor],
-                  stops: [0, 1],
-                ),
-                borderRadius: BorderRadius.all(
-                  Radius.circular(15),
-                ),
+            height: 50,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [gsecondaryColor, gPrimaryColor],
+                stops: [0, 1],
               ),
-              child: InkWell(
-                onTap: () {
-                  // Navigator.pushNamed(context, '/signup');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AddProfilePicScreen()),
-                  );
-                },
-                child: Center(
-                  child: Text(
-                    "Next",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15),
-                  ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(15),
+              ),
+            ),
+            child: InkWell(
+              onTap: () {
+                // Navigator.pushNamed(context, '/signup');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddProfilePicScreen()),
+                );
+              },
+              child: Center(
+                child: Text(
+                  "Next",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15),
                 ),
               ),
             ),
+          ),
         ],
       ),
     );
+  }
+
+  void _openImagePicker(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Container(
+            height: 120,
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Text("Pick an Image"),
+                SizedBox(
+                  height: 10.0
+                )
+              ],
+            ),
+          );
+        });
   }
 }

@@ -1,5 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gebeta_food/Screens/auth_screen/phone.dart';
+import 'package:gebeta_food/Screens/auth_screen/add_profile_pic.dart';
+// import 'package:gebeta_food/Screens/auth_screen/phone.dart';
+// import 'package:gebeta_food/Screens/auth_screen/phone1.dart';
+// import 'package:gebeta_food/Screens/auth_screen/signup.dart';
 import 'package:gebeta_food/Screens/cart_screen/cart.dart';
 import 'package:gebeta_food/Screens/home_screen/home_page.dart';
 import 'package:gebeta_food/Screens/home_screen/landing_page.dart';
@@ -10,9 +15,12 @@ import 'package:gebeta_food/Screens/user_profile/profile_screen.dart';
 import 'package:gebeta_food/constants.dart';
 import 'package:gebeta_food/home_page.dart';
 import 'Screens/auth_screen/login_page.dart';
-import 'Screens/auth_screen/signup_page.dart';
+import 'Screens/auth_screen/sign_up_otp.dart';
+// import 'Screens/auth_screen/signup_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
@@ -25,22 +33,23 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         // brightness: Brightness.dark,
         primaryColor: gsecondaryColor,
-        fontFamily: "Montserrat"
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        fontFamily: "Montserrat",
       ),
-      home: HomeScreen(),
+      home: AddProfilePicScreen(),
       // home: HomeScreen(),
       routes: {
-        '/login': (context)=>LoginPage(),
-       '/signup':(context)=>SignUpPage(),
-       '/home':(context)=>MyHomePage(),
-       '/profile':(context)=>ProfileScreen(),
-       '/restaurants':(context)=>AllRestaurantsPage(),
-       '/edit_profile':(context)=>EditProfilePage(),
-       '/selectTopics':(context)=>SelectTopicsPage(),
-       '/my_cart':(context)=>MyCartPage(),
-       '/my_orders': (context)=>AllOrdersScreen(),
-       '/phone_ver': (context)=>PhoneVerification(),
-     },
+        '/login': (context) => LoginPage(),
+        '/signup': (context) => LoginScreen(),
+        '/home': (context) => MyHomePage(),
+        '/profile': (context) => ProfileScreen(),
+        '/restaurants': (context) => AllRestaurantsPage(),
+        '/edit_profile': (context) => EditProfilePage(),
+        '/selectTopics': (context) => SelectTopicsPage(),
+        '/my_cart': (context) => MyCartPage(),
+        '/my_orders': (context) => AllOrdersScreen(),
+        '/phone_ver': (context) => LoginScreen(),
+      },
     );
   }
 }
