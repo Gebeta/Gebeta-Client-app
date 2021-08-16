@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gebeta_food/Screens/auth_screen/add_profile_pic.dart';
+import 'package:gebeta_food/Screens/auth_screen/signup_page.dart';
 // import 'package:gebeta_food/Screens/auth_screen/phone.dart';
 // import 'package:gebeta_food/Screens/auth_screen/phone1.dart';
 // import 'package:gebeta_food/Screens/auth_screen/signup.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
       // home: HomeScreen(),
       routes: {
         '/login': (context) => LoginPage(),
-        '/signup': (context) => LoginScreen(),
+        '/signup': (context) => SignUpPage(),
         '/home': (context) => MyHomePage(),
         '/profile': (context) => ProfileScreen(),
         '/restaurants': (context) => AllRestaurantsPage(),

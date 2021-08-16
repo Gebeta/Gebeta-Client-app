@@ -165,7 +165,8 @@ class _MyHomePageState extends State<MyHomePage>
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            _globalKey.currentState!.openDrawer();
+            Navigator.pushReplacementNamed(
+                          context, '/my_cart');
             print("clicked");
           },
           icon: SvgPicture.asset('assets/icons/menu.svg'),

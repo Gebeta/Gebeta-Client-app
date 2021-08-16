@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gebeta_food/constants.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddProfilePicScreen extends StatefulWidget {
   const AddProfilePicScreen({Key? key}) : super(key: key);
@@ -9,6 +12,10 @@ class AddProfilePicScreen extends StatefulWidget {
 }
 
 class _AddProfilePicScreenState extends State<AddProfilePicScreen> {
+  late File _imageFile;
+  String imagePath = "";
+  final picker = ImagePicker();
+  bool imageUploaded = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,15 +49,23 @@ class _AddProfilePicScreenState extends State<AddProfilePicScreen> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 20),
+                margin: EdgeInsets.only(top: 20,bottom: 20),
                 alignment: Alignment.center,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100.0),
-                  child: Image.asset(
-                    "assets/images/female_avatar.jpg",
-                    fit: BoxFit.cover,
-                    width: MediaQuery.of(context).size.width * 0.5,
-                  ),
+                  child: imagePath != ""
+                      ? Image.file(
+                         File(imagePath),
+                          fit: BoxFit.cover,
+                          height: 200.0,
+                          width: MediaQuery.of(context).size.width * 0.5,
+                        )
+                      // :Text("please pick image")
+                      : Image.asset(
+                          "assets/images/female_avatar.jpg",
+                          fit: BoxFit.cover,
+                          width: MediaQuery.of(context).size.width * 0.5,
+                        ),
                 ),
               ),
               Container(
@@ -79,7 +94,9 @@ class _AddProfilePicScreenState extends State<AddProfilePicScreen> {
                       )
                     ],
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    _openImagePicker(context);
+                  },
                 ),
               ),
               SizedBox(
@@ -135,19 +152,42 @@ class _AddProfilePicScreenState extends State<AddProfilePicScreen> {
     );
   }
 
+  void _getImage(BuildContext context, ImageSource source) async {
+    final pickedImage =
+        (await picker.pickImage(source: source, maxWidth: 400.0));
+    if (pickedImage != null) {
+      Navigator.pop(context);
+      setState(() {
+        imagePath = pickedImage.path;
+        print(imagePath);
+      });
+    }
+  }
+
   void _openImagePicker(BuildContext context) {
     showModalBottomSheet(
         context: context,
         builder: (context) {
           return Container(
-            height: 120,
+            height: 170,
             padding: EdgeInsets.all(10),
             child: Column(
               children: [
                 Text("Pick an Image"),
-                SizedBox(
-                  height: 10.0
-                )
+                SizedBox(height: 10.0),
+                TextButton(
+                  onPressed: () {
+                    _getImage(context, ImageSource.camera);
+                  },
+                  child: Text("Use Camera"),
+                ),
+                SizedBox(height: 5.0),
+                TextButton(
+                  onPressed: () {
+                    _getImage(context, ImageSource.gallery);
+                  },
+                  child: Text("Use Gallery"),
+                ),
               ],
             ),
           );
