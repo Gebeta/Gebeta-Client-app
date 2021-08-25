@@ -1,50 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:gebeta_food/Screens/restaurant/restaurant.dart';
-import 'package:gebeta_food/constants.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:gebeta_food/Screens/restaurant/restaurant.dart';
 import 'package:gebeta_food/models/restaurant.dart';
+import 'package:gebeta_food/scoped-models/main.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:scoped_model/scoped_model.dart';
 
-class RestaurantsList extends StatefulWidget {
-  const RestaurantsList({Key? key}) : super(key: key);
+import '../../constants.dart';
+
+class RestaurantCard extends StatelessWidget {
+  final int restaurantIndex;
+
+  RestaurantCard(this.restaurantIndex);
 
   @override
-  _RestaurantsListState createState() => _RestaurantsListState();
-}
-
-Widget _listItem(BuildContext context, String imgPath, String restaurantName,
-    String desc, double rating, bool isOpen) {
-  return Padding(
-    padding: const EdgeInsets.all(10.0),
-    child: GestureDetector(
-      onTap: () {
-        print("Restaurant clicked");
-        Restaurant restaurant = Restaurant(
-            id: "612569c05920bc395d2a7f53",
-            name: restaurantName,
-            address: "",
-            phoneNo: "",
-            email: "email",
-            rating: rating,
-            isApproved: isOpen);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => new RestaurantScreen(restaurant)),
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.0),
-          color: Colors.white,
-        ),
-        child: Column(
-          children: <Widget>[
-            ClipRRect(
+  Widget build(BuildContext context) {
+    return ScopedModelDescendant<MainModel>(
+      builder: (context, Widget child, MainModel model) {
+        Restaurant restaurantModel = model.displayRestaurants[restaurantIndex];
+        return GestureDetector(
+          onTap: () {
+            print("Restaurant clicked");
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => new RestaurantScreen(restaurantModel)),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12.0),
+              color: Colors.white,
+            ),
+            child: Column(
+              children: <Widget>[
+                ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Hero(
-                tag: imgPath,
+                tag: restaurantModel.name,
                 child: Image.asset(
-                  imgPath,
+                  'assets/images/burger2.png',
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height * 0.26,
@@ -60,7 +55,7 @@ Widget _listItem(BuildContext context, String imgPath, String restaurantName,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        restaurantName,
+                        restaurantModel.name,
                         style: TextStyle(
                             color: Color(0xFF563734),
                             fontFamily: 'Montserrat',
@@ -73,12 +68,12 @@ Widget _listItem(BuildContext context, String imgPath, String restaurantName,
                         ),
                         padding: EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
-                            color: isOpen
+                            color: restaurantModel.isApproved
                                 ? Color(0xff0267C1).withOpacity(0.65)
                                 : Colors.red.withOpacity(0.65),
                             borderRadius: BorderRadius.circular(4)),
                         child: Text(
-                          isOpen ? "Open" : "Closed",
+                          restaurantModel.isApproved ? "Open" : "Closed",
                           style: TextStyle(color: whiteColor),
                         ),
                       )
@@ -86,7 +81,7 @@ Widget _listItem(BuildContext context, String imgPath, String restaurantName,
                   ),
                   Container(
                     child: RatingBarIndicator(
-                      rating: rating,
+                      rating: 4,
                       itemBuilder: (context, index) => Icon(
                         Icons.star,
                         color: gPrimaryColor,
@@ -98,7 +93,7 @@ Widget _listItem(BuildContext context, String imgPath, String restaurantName,
                   SizedBox(height: 10.0),
                   Container(
                     child: Text(
-                      desc,
+                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In feugiat pretium quam a maximus. In sodales interdum diam, eget porttitor justo ullamcorper sit amet. ',
                       style: TextStyle(
                           color: Color(0xFFB2A9A9),
                           fontFamily: 'Montserrat',
@@ -109,34 +104,11 @@ Widget _listItem(BuildContext context, String imgPath, String restaurantName,
                 ],
               ),
             )
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-class _RestaurantsListState extends State<RestaurantsList> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        _listItem(
-            context,
-            'assets/images/burger2.png',
-            'Restaurant 1',
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In feugiat pretium quam a maximus. In sodales interdum diam, eget porttitor justo ullamcorper sit amet. ',
-            5,
-            true),
-        SizedBox(height: 10.0),
-        _listItem(
-            context,
-            'assets/images/food.png',
-            'Restaurant 1',
-            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. In feugiat pretium quam a maximus. In sodales interdum diam, eget porttitor justo ullamcorper sit amet. ',
-            3.3,
-            false),
-      ],
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

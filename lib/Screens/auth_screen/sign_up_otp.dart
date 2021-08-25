@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gebeta_food/Screens/auth_screen/signup_page.dart';
 import 'package:gebeta_food/Screens/widgets/others/logo.dart';
 
@@ -59,11 +60,15 @@ class _LoginScreenState extends State<LoginScreen> {
             controller: phoneController,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
-              hintText: " 0912345678",
-              prefix: Text(
-                "+251",
-                style: TextStyle(
-                    color: gPrimaryColor, fontWeight: FontWeight.w600),
+              hintText: " +251912345678",
+              // prefix: Text(
+              //   "+251",
+              //   style: TextStyle(
+              //       color: gPrimaryColor, fontWeight: FontWeight.w600),
+              // ),
+              prefix: SvgPicture.asset(
+                'assets/icons/ethiopia.svg',
+                width: 25,
               ),
               labelText: "Phone Number",
               labelStyle:
@@ -142,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (authCredential.user != null) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SignUpPage()));
+            context, MaterialPageRoute(builder: (context) => SignUpPage(phoneController.text)));
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
@@ -302,22 +307,22 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 30),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [gsecondaryColor, gPrimaryColor],
-                      stops: [0, 1],
-                    ),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(15),
-                    ),
-                  ),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [gsecondaryColor, gPrimaryColor],
+                stops: [0, 1],
+              ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(15),
+              ),
+            ),
             child: TextButton(
               style: TextButton.styleFrom(
-                  primary: Colors.white,
-                  textStyle: TextStyle(
-                    fontSize: 20,
-                  ),
+                primary: Colors.white,
+                textStyle: TextStyle(
+                  fontSize: 20,
                 ),
+              ),
               onPressed: () async {
                 PhoneAuthCredential phoneAuthCredential =
                     PhoneAuthProvider.credential(

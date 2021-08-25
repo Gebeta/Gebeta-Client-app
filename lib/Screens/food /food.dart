@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:gebeta_food/constants.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:gebeta_food/models/item.dart';
 
 class FoodDetailPage extends StatefulWidget {
-  final String foodName;
-  final String img;
-  final double price;
+  final Item item;
 
-  FoodDetailPage(this.foodName, this.img, this.price);
+  FoodDetailPage(this.item);
 
   @override
   _FoodDetailPageState createState() => _FoodDetailPageState();
@@ -17,6 +16,13 @@ class FoodDetailPage extends StatefulWidget {
 
 class _FoodDetailPageState extends State<FoodDetailPage> {
   int count = 1;
+  List<NetworkImage> networkImages = [];
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // networkImages = getImages(widget.item);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,11 +42,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                   dotSize: 4.0,
                   autoplay: false,
                   boxFit: BoxFit.cover,
-                  images: [
-                    ExactAssetImage("assets/images/burger.png"),
-                    ExactAssetImage("assets/images/burger2.png"),
-                    ExactAssetImage("assets/images/burger.png"),
-                  ],
+                  images: getImages(widget.item)
                 ),
               ),
               Padding(
@@ -51,7 +53,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                   children: <Widget>[
                     IconButton(
                         onPressed: () {
-                           Navigator.pop(context);
+                          Navigator.pop(context);
                         },
                         color: whiteColor,
                         icon: Icon(Icons.arrow_back_ios)),
@@ -120,7 +122,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              widget.foodName,
+                              widget.item.name,
                               style: TextStyle(
                                   color: Color(0xFF563734),
                                   fontFamily: 'Montserrat',
@@ -128,7 +130,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                                   fontSize: 30.0),
                             ),
                             Text(
-                              widget.price.toString() + " ETB",
+                              widget.item.price.toString() + " ETB",
                               style: TextStyle(
                                   color: gsecondaryColor,
                                   fontFamily: 'Montserrat',
@@ -207,7 +209,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                     child: ElevatedButton(
                       onPressed: () {},
                       child: Text(
-                          "Add (${count.toString()}) to Cart - ${count * widget.price}"),
+                          "Add (${count.toString()}) to Cart - ${count * widget.item.price}"),
                       style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(gPrimaryColor),
@@ -229,5 +231,13 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
         ],
       ),
     );
+  }
+
+  List<NetworkImage> getImages(Item item) {
+    List<NetworkImage> networkImages = [];
+    for (var i = 0; i < item.imageUrl.length; i++) {
+      networkImages.add(NetworkImage('http://192.168.1.11:3000/images/${item.id}/${item.imageUrl[1]}'));
+    }
+    return networkImages;
   }
 }

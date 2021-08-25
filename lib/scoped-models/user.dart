@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 
 class UserModel extends Model {
   Future<Map<String, dynamic>> signUp(
-      String id,
       String fname,
       String lname,
       String username,
@@ -15,7 +14,6 @@ class UserModel extends Model {
       String phoneNo,
       String address) async {
     final Map<String, dynamic> userData = {
-      "id": id,
       "first_name": fname,
       "last_name": lname,
       "username": username,
@@ -24,7 +22,7 @@ class UserModel extends Model {
       "phone_no": phoneNo,
       "address": address
     };
-    Uri url = Uri.parse("http://10.0.2.2:3000/client");
+    Uri url = Uri.parse("http://192.168.8.142:3000/auth/signup");
     final http.Response response = await http.post(url,
         body: json.encode(userData),
         headers: {'Content-Type': 'application/json'});

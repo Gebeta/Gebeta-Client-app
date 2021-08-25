@@ -1,14 +1,12 @@
-class User {
+class Restaurant {
   late final String id;
   late final String name;
-  late final String userName;
   late final String address;
   late final String phoneNo;
-  late final String status;
-  late final String license;
   late final String email;
-  late final String rating;
-  late final String password;
+  late final double rating;
+  late final bool isApproved;
 
-  User({required this.id, required this.email, required this.password});
+
+  Restaurant({required this.id,required this.name,required this.address,required this.phoneNo,required this.email, required this.rating, required this.isApproved });
 }

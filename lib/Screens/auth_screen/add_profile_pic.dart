@@ -130,11 +130,12 @@ class _AddProfilePicScreenState extends State<AddProfilePicScreen> {
             child: InkWell(
               onTap: () {
                 // Navigator.pushNamed(context, '/signup');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AddProfilePicScreen()),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //       builder: (context) => ()),
+                // );
+                Navigator.pushReplacementNamed(context, '/selectTopics');
               },
               child: Center(
                 child: Text(

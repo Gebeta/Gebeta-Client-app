@@ -15,8 +15,10 @@ import 'package:gebeta_food/Screens/user_profile/edit_profile.dart';
 import 'package:gebeta_food/Screens/user_profile/profile_screen.dart';
 import 'package:gebeta_food/constants.dart';
 import 'package:gebeta_food/home_page.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'Screens/auth_screen/login_page.dart';
 import 'Screens/auth_screen/sign_up_otp.dart';
+import 'scoped-models/main.dart';
 // import 'Screens/auth_screen/signup_page.dart';
 
 void main() async {
@@ -29,28 +31,37 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Gebeta Food Delivery',
-      theme: ThemeData(
-        // brightness: Brightness.dark,
-        primaryColor: gsecondaryColor,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        fontFamily: "Montserrat",
+    final MainModel model = MainModel();
+    return ScopedModel<MainModel>(
+       model: model,
+      child: MaterialApp(
+        title: 'Gebeta Food Delivery',
+        theme: ThemeData(
+          // brightness: Brightness.dark,
+          primaryColor: gsecondaryColor,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          fontFamily: "Montserrat",
+        ),
+        home: HomeScreen(),
+        // home: HomeScreen(),
+        routes: {
+          '/login': (context) => LoginPage(),
+          // '/home': (context) => MyHomePage(),
+          '/profile': (context) => ProfileScreen(),
+          '/restaurants': (context) => AllRestaurantsPage(),
+          '/edit_profile': (context) => EditProfilePage(),
+          '/selectTopics': (context) => SelectTopicsPage(),
+          '/my_cart': (context) => MyCartPage(),
+          '/my_orders': (context) => AllOrdersScreen(),
+          '/phone_ver': (context) => LoginScreen(),
+          'add_profile' :(context) => AddProfilePicScreen()
+        },
+        onUnknownRoute: (RouteSettings settings) {
+          return MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  MyHomePage(model: model,));
+        },
       ),
-      home: AddProfilePicScreen(),
-      // home: HomeScreen(),
-      routes: {
-        '/login': (context) => LoginPage(),
-        '/signup': (context) => SignUpPage(),
-        '/home': (context) => MyHomePage(),
-        '/profile': (context) => ProfileScreen(),
-        '/restaurants': (context) => AllRestaurantsPage(),
-        '/edit_profile': (context) => EditProfilePage(),
-        '/selectTopics': (context) => SelectTopicsPage(),
-        '/my_cart': (context) => MyCartPage(),
-        '/my_orders': (context) => AllOrdersScreen(),
-        '/phone_ver': (context) => LoginScreen(),
-      },
     );
   }
 }

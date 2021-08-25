@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gebeta_food/Screens/home_screen/list_view.dart';
-import 'package:gebeta_food/Screens/home_screen/popular_food.dart';
-// import 'package:gebeta_food/Screens/home_screen/popular_food.dart';
-import 'package:gebeta_food/Screens/home_screen/restaurants_list.dart';
+import 'package:gebeta_food/Screens/home_screen/pop_foods.dart';
+import 'package:gebeta_food/Screens/home_screen/rest.dart';
 import 'package:gebeta_food/constants.dart';
+import 'package:gebeta_food/scoped-models/main.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
+  final MainModel model;
+  const MyHomePage({required this.model});
+ 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -22,6 +23,7 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   void initState() {
     super.initState();
+    
     tabController = TabController(vsync: this, length: 6);
   }
 
@@ -165,8 +167,7 @@ class _MyHomePageState extends State<MyHomePage>
         elevation: 0,
         leading: IconButton(
           onPressed: () {
-            Navigator.pushReplacementNamed(
-                          context, '/my_cart');
+            _globalKey.currentState!.openDrawer();
             print("clicked");
           },
           icon: SvgPicture.asset('assets/icons/menu.svg'),
@@ -178,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage>
         actions: [
           IconButton(
               onPressed: () {
-                _globalKey.currentState!.openDrawer();
+                Navigator.pushReplacementNamed(context, '/my_cart');
                 print("clicked");
               },
               icon: Icon(Icons.shopping_cart_outlined)),
@@ -230,20 +231,14 @@ class _MyHomePageState extends State<MyHomePage>
                 padding: EdgeInsets.only(top: 105, left: 15.0, right: 15.0),
                 child: Form(
                   key: _formKey,
-                  child: Row(
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10.0, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: whiteColor,
-                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                        ),
-                        child: _buildSearchTextField(),
-                      ),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.filter))
-                    ],
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 10.0, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: whiteColor,
+                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                    ),
+                    child: _buildSearchTextField(),
                   ),
                 ),
               )
@@ -298,7 +293,7 @@ class _MyHomePageState extends State<MyHomePage>
               _buildViewAllTextWidget("/foods")
             ],
           ),
-          Recommendations(),
+          Items(widget.model),
           SizedBox(height: 10.0),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -307,7 +302,7 @@ class _MyHomePageState extends State<MyHomePage>
               _buildViewAllTextWidget("/restaurants")
             ],
           ),
-          RestaurantsList(),
+          Restaurants(widget.model),
           SizedBox(height: 20.0)
         ],
       ),
@@ -319,6 +314,11 @@ class _MyHomePageState extends State<MyHomePage>
       decoration: InputDecoration(
         border: InputBorder.none,
         hintText: "search Your favourite food item",
+        suffixIcon: Icon(
+          Icons.filter_list,
+          color: gPrimaryColor,
+          size: 25,
+        ),
         hintStyle: TextStyle(color: ksecondaryColor),
         icon: Icon(
           Icons.search,

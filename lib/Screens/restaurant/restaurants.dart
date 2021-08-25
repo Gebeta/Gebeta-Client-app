@@ -22,8 +22,8 @@ class AllRestaurantsPage extends StatelessWidget {
         ),
         body: ListView(
           children: [
-            RestaurantsList(),
-            RestaurantsList()
+            // RestaurantsList(),
+            // RestaurantsList()
             
           ],
         ));

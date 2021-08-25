@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:gebeta_food/Screens/auth_screen/add_profile_pic.dart';
 import 'package:gebeta_food/Screens/widgets/form_input/button.dart';
 import 'package:gebeta_food/Screens/widgets/others/logo.dart';
 import 'package:gebeta_food/Screens/widgets/others/text.dart';
 import 'package:gebeta_food/constants.dart';
-import 'package:gebeta_food/scoped-models/user.dart';
+import 'package:gebeta_food/scoped-models/main.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:scoped_model/scoped_model.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+  final String phoneNo;
+  const SignUpPage(this.phoneNo);
 
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -45,53 +47,49 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    final UserModel model = UserModel();
-    return ScopedModel<UserModel>(
-      model: model,
-      child: Scaffold(
-        body: ListView(
-          padding: EdgeInsets.all(10.0),
-          children: <Widget>[
-            Logo(),
-            Center(child: TextWidget("Sign Up")),
-            SizedBox(height: 2),
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  _buildFirstNameField(),
-                  SizedBox(height: 5.0),
-                  _buildLastNameField(),
-                  SizedBox(height: 5.0),
-                  _buildEmailField(),
-                  SizedBox(height: 10.0),
-                  _buildPasswordField(),
-                  _buildConfirmPasswordField(),
-                  SizedBox(height: 20),
-                  ScopedModelDescendant<UserModel>(
-                    builder: (context, Widget child, UserModel moder) {
-                      return Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [gsecondaryColor, gPrimaryColor],
-                            stops: [0, 1],
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15),
-                          ),
+    return Scaffold(
+      body: ListView(
+        padding: EdgeInsets.all(10.0),
+        children: <Widget>[
+          Logo(),
+          Center(child: TextWidget("Sign Up")),
+          SizedBox(height: 2),
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                _buildFirstNameField(),
+                SizedBox(height: 5.0),
+                _buildLastNameField(),
+                SizedBox(height: 5.0),
+                _buildEmailField(),
+                SizedBox(height: 10.0),
+                _buildPasswordField(),
+                _buildConfirmPasswordField(),
+                SizedBox(height: 20),
+                ScopedModelDescendant<MainModel>(
+                  builder: (context, Widget child, MainModel model) {
+                    return Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [gsecondaryColor, gPrimaryColor],
+                          stops: [0, 1],
                         ),
-                        child: InkWell(
-                            onTap: () => _submitForm(model.signUp),
-                            child: ButtonWidget(() {}, "Sign Up")),
-                      );
-                    },
-                  ),
-                ],
-              ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(15),
+                        ),
+                      ),
+                      child: InkWell(
+                          onTap: () => _submitForm(model.signUp),
+                          child: ButtonWidget(() {}, "Sign Up")),
+                    );
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -246,11 +244,16 @@ class _SignUpPageState extends State<SignUpPage> {
         "eyael",
         _formData['password'],
         _formData['email'],
-        "0826747834",
+        widget.phoneNo,
         "Summit");
     print("response data " + response['success'].toString());
     if (response['success']) {
-      Navigator.pushReplacementNamed(context, '/selectTopics');
+      Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      new AddProfilePicScreen()),
+            );
     }
   }
 }

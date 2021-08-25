@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gebeta_food/constants.dart';
+import 'package:gebeta_food/models/restaurant.dart';
 
 class RestaurantScreen extends StatefulWidget {
-  final String restauranName;
-  final String img;
-  final String description;
-  final double rating;
-  final bool isOpen;
+  final Restaurant restaurant;
 
-  RestaurantScreen(
-      this.restauranName, this.img, this.description, this.rating, this.isOpen);
+  RestaurantScreen(this.restaurant);
 
   @override
   _RestaurantScreenState createState() => _RestaurantScreenState();
@@ -96,11 +92,11 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
           Stack(
             children: [
               Hero(
-                tag: widget.img,
+                tag: widget.restaurant.name,
                 child: Image(
                   height: MediaQuery.of(context).size.height * 0.3,
                   width: MediaQuery.of(context).size.width,
-                  image: AssetImage(widget.img),
+                  image: AssetImage(""),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -125,7 +121,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  widget.restauranName,
+                  widget.restaurant.name,
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
                 ),
               ],
@@ -136,7 +132,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
             child: Row(
               children: [
                 RatingBarIndicator(
-                  rating: widget.rating,
+                  rating: 3,
                   itemBuilder: (context, index) => Icon(
                     Icons.star,
                     color: gPrimaryColor,

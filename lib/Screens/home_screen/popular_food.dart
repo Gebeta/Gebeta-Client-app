@@ -31,11 +31,11 @@ class _RecommendationsState extends State<Recommendations> {
     return InkWell(
       onTap: () {
         print("the whole thing clicked");
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => new FoodDetailPage(foodName, img, price)),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //       builder: (context) => new FoodDetailPage(foodName, img, price)),
+        // );
       },
       child: Container(
         margin: EdgeInsets.all(15.0),

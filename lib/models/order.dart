@@ -1,11 +1,11 @@
-import 'package:gebeta_food/models/food.dart';
+import 'package:gebeta_food/models/item.dart';
 import 'package:gebeta_food/models/user.dart';
 
 class Order {
   final String id;
   final String date;
   final int quantity;
-  final Food food;
+  final Item food;
   final User user;
 
   Order({

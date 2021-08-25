@@ -1,39 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:gebeta_food/Screens/food%20/food.dart';
-// import 'package:gebeta_food/Screens/restaurant/restaurant.dart';
 import 'package:gebeta_food/constants.dart';
+import 'package:gebeta_food/models/item.dart';
+import 'package:gebeta_food/scoped-models/main.dart';
+import 'package:scoped_model/scoped_model.dart';
 
-class PopularFoodListView extends StatefulWidget {
-  @override
-  _PopularFoodListViewState createState() => _PopularFoodListViewState();
-}
+class FoodCard extends StatelessWidget {
+  final int itemIndex;
+  const FoodCard(this.itemIndex);
 
-class _PopularFoodListViewState extends State<PopularFoodListView> {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      scrollDirection: Axis.horizontal,
-      children: <Widget>[
-        _buildFoodCard("assets/images/burger.png", "Burger", 80.0, 5),
-        _buildFoodCard("assets/images/burger.png", "Burger", 80.0, 5),
-        _buildFoodCard("assets/images/burger.png", "Burger", 80.0, 5),
-      ],
-    );
-  }
-
- Widget _buildFoodCard(
-      String img, String foodName, double price, double rating) {
-    return InkWell(
-      onTap: () {
-        print("the whole thing clicked");
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //       builder: (context) => new FoodDetailPage(foodName, img, price)),
-        // );
-      },
-      child: Container(
+    return ScopedModelDescendant<MainModel>(
+      builder: (context, Widget child, MainModel model) {
+        Item itemModel = model.displayItems[itemIndex];
+        return InkWell(
+          onTap: () {
+            print("the whole thing clicked");
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      new FoodDetailPage(itemModel)),
+            );
+          },
+          child: Container(
         margin: EdgeInsets.all(15.0),
         decoration: BoxDecoration(
           color: whiteColor,
@@ -52,8 +43,8 @@ class _PopularFoodListViewState extends State<PopularFoodListView> {
               padding: const EdgeInsets.all(8.0),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30.0),
-                child: Image.asset(
-                  img,
+                child: Image.network(
+                  'http://192.168.1.11:3000/images/${itemModel.id}/${itemModel.imageUrl[1]}',
                   fit: BoxFit.cover,
                   height: 120,
                   width: 130,
@@ -63,7 +54,7 @@ class _PopularFoodListViewState extends State<PopularFoodListView> {
             Container(
               padding: EdgeInsets.only(top: 10.0, ),
               child: Text(
-                foodName,
+                itemModel.name,
                 style: TextStyle(
                   fontFamily: "Montserrat",
                   fontSize: 18.0,
@@ -77,7 +68,7 @@ class _PopularFoodListViewState extends State<PopularFoodListView> {
                 Padding(
                   padding: EdgeInsets.only(left: 15.0),
                   child: Text(
-                    "$price ETB",
+                      '${itemModel.price.toString()} ETB',
                     style: TextStyle(
                         fontFamily: "Montserrat",
                         color: gsecondaryColor,
@@ -85,8 +76,10 @@ class _PopularFoodListViewState extends State<PopularFoodListView> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.add_shopping_cart_outlined),
+                  onPressed: () {
+                    
+                  },
+                  icon: Icon(Icons.add_circle),
                   color: gsecondaryColor,
                   iconSize: 35,
                 ),
@@ -95,7 +88,8 @@ class _PopularFoodListViewState extends State<PopularFoodListView> {
           ],
         ),
       ),
+        );
+      },
     );
   }
-
 }
