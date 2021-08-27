@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:carousel_pro/carousel_pro.dart';
+import 'package:gebeta_food/Screens/cart_screen/cart.dart';
 import 'package:gebeta_food/constants.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gebeta_food/models/item.dart';
+import 'package:gebeta_food/scoped-models/main.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class FoodDetailPage extends StatefulWidget {
   final Item item;
@@ -17,12 +20,13 @@ class FoodDetailPage extends StatefulWidget {
 class _FoodDetailPageState extends State<FoodDetailPage> {
   int count = 1;
   List<NetworkImage> networkImages = [];
-@override
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
     // networkImages = getImages(widget.item);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,16 +38,15 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                 height: MediaQuery.of(context).size.height / 2,
                 width: MediaQuery.of(context).size.width,
                 child: Carousel(
-                  dotIncreasedColor: Color(0xFFFF335C),
-                  dotBgColor: Colors.black.withOpacity(0.1),
-                  showIndicator: true,
-                  animationCurve: Curves.fastOutSlowIn,
-                  indicatorBgPadding: 10.0,
-                  dotSize: 4.0,
-                  autoplay: false,
-                  boxFit: BoxFit.cover,
-                  images: getImages(widget.item)
-                ),
+                    dotIncreasedColor: Color(0xFFFF335C),
+                    dotBgColor: Colors.black.withOpacity(0.1),
+                    showIndicator: true,
+                    animationCurve: Curves.fastOutSlowIn,
+                    indicatorBgPadding: 10.0,
+                    dotSize: 4.0,
+                    autoplay: false,
+                    boxFit: BoxFit.cover,
+                    images: getImages(widget.item)),
               ),
               Padding(
                 padding:
@@ -203,27 +206,47 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                     ],
                   ),
                   Container(
-                    width: double.infinity,
-                    padding:
-                        EdgeInsets.only(bottom: 15.0, right: 15.0, left: 15.0),
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: Text(
-                          "Add (${count.toString()}) to Cart - ${count * widget.item.price}"),
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(gPrimaryColor),
-                        padding: MaterialStateProperty.all(EdgeInsets.symmetric(
-                            horizontal: 30.0, vertical: 20)),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
+                      width: double.infinity,
+                      padding: EdgeInsets.only(
+                          bottom: 15.0, right: 15.0, left: 15.0),
+                      child: ScopedModelDescendant<MainModel>(
+                          builder: (context, Widget child, MainModel model) {
+                        return ElevatedButton(
+                          onPressed: () {
+                            if(model.checkingItem(widget.item.id)== true){
+                              print("you can't add");
+                            }
+                            else{
+                              model.addToCart(
+                                widget.item.id,
+                                widget.item.name,
+                                widget.item.imageUrl[0],
+                                widget.item.price.toDouble(),
+                                count);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => new MyCartPage(model)));
+                            }
+                            
+                          },
+                          child: Text(
+                              "Add (${count.toString()}) to Cart - ${count * widget.item.price}"),
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(gPrimaryColor),
+                            padding: MaterialStateProperty.all(
+                                EdgeInsets.symmetric(
+                                    horizontal: 30.0, vertical: 20)),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
-                  )
+                        );
+                      }))
                 ],
               ),
             ),
@@ -236,7 +259,8 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
   List<NetworkImage> getImages(Item item) {
     List<NetworkImage> networkImages = [];
     for (var i = 0; i < item.imageUrl.length; i++) {
-      networkImages.add(NetworkImage('http://192.168.1.11:3000/images/${item.id}/${item.imageUrl[1]}'));
+      networkImages.add(NetworkImage(
+          'http://192.168.1.11:3000/images/${item.id}/${item.imageUrl[i]}'));
     }
     return networkImages;
   }

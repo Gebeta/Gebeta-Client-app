@@ -10,22 +10,29 @@ mixin AllModels on Model {
   List<Restaurant> _restaurants = [];
   List<Item> _item = [];
 
-  List<Item> cart = [];
+  double totalAmount = 0.0;
 
-  addToCart(Item item){
-    cart.add(item);
-  }
+  List<Cart> cart = [];
 
-  String totalPrice(List<Item> items){
-    double totalAmount = 0.0;
-
-    for(int i = 0; i < items.length; i++){
-      totalAmount = totalAmount + items[i].price * items[i].quantity;
+  double totalPrice(List<Cart> cartItems) {
+    for (int i = 0; i < cartItems.length; i++) {
+          totalAmount = totalAmount + cartItems[i].price * cartItems[i].quantity;
     }
-
-    return totalAmount.toStringAsFixed(2);
+    return totalAmount;
   }
 
+  addToCart(id, name, image, price, quantity) {
+    Cart cartItem = Cart(
+      id: id,
+      name: name,
+      image: image,
+      price: price,
+      quantity: quantity,
+    );
+    cart.add(cartItem);
+  }
+
+ 
   Future<Null> fetchItems() {
     Uri url = Uri.parse("http://192.168.1.11:3000/items");
     return http.get(url).then((http.Response response) {
@@ -35,14 +42,13 @@ mixin AllModels on Model {
       print(itemList);
       itemList.forEach((dynamic data) {
         Item item = Item(
-          id: data['_id'],
-          name: data['foodName'],
-          description: data['description'],
-          imageUrl: data['imgLocation'],
-          menuStatus: data['isServed'],
-          price: data['price'],
-          quantity: 1
-        );
+            id: data['_id'],
+            name: data['foodName'],
+            description: data['description'],
+            imageUrl: data['imgLocation'],
+            menuStatus: data['isServed'],
+            price: data['price'].toDouble(),
+            quantity: 1);
         fetchedItems.add(item);
       });
       _item = fetchedItems;
@@ -106,6 +112,23 @@ mixin UserModel on AllModels {
 
     return {'success': true, 'message': "signed up"};
   }
+
+  Future<Map<String, dynamic>> login(String password,String email) async {
+    final Map<String, dynamic> authData = {
+      "email": email,
+      "password": password,
+    };
+    
+    Uri url = Uri.parse("http://192.168.1.11:3000/auth/clientlogin");
+    final http.Response response = await http.post(url,
+        body: json.encode(authData),
+        headers: {'Content-Type': 'application/json'});
+
+    final Map<String, dynamic> responseData = json.decode(response.body);
+    print(responseData);
+
+    return {'success': true, 'message': "signed up"};
+  }
 }
 
 mixin RestaurantModel on AllModels {
@@ -115,8 +138,27 @@ mixin RestaurantModel on AllModels {
 }
 
 mixin ItemModel on AllModels {
-  
-  List<Item> get displayItems{
+  List<Item> get displayItems {
     return List.from(_item);
+  }
+}
+
+mixin CartModel on AllModels {
+  List<Cart> get getCartList {
+    return List.from(cart);
+  }
+
+  bool checkingItem(id){
+    List<Cart> items = getCartList;
+    bool _isILike;
+    var contain = items.where((element) => element.id == id);
+      if (contain.isEmpty){
+        _isILike = false;
+      } else {
+        _isILike = true;
+      }
+    print(_isILike);
+
+    return _isILike;
   }
 }

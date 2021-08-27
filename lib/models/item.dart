@@ -3,7 +3,7 @@ class Item {
   final List<dynamic> imageUrl;
   final String description;
   final String name;
-  final int price;
+  final double price;
   final bool menuStatus;
   int quantity =1;
 
