@@ -27,13 +27,26 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final MainModel _model = MainModel();
+
+  @override
+  void initState() {
+    _model.autoAuthenthicate();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final MainModel model = MainModel();
     return ScopedModel<MainModel>(
-       model: model,
+      model: _model,
       child: MaterialApp(
         title: 'Gebeta Food Delivery',
         theme: ThemeData(
@@ -43,24 +56,28 @@ class MyApp extends StatelessWidget {
           fontFamily: "Montserrat",
         ),
         debugShowCheckedModeBanner: false,
-        home: HomeScreen(),
+        // home: HomeScreen(),
         // home: HomeScreen(),
         routes: {
+          '/': (context) => _model.getUser.id == ""
+              ? HomeScreen()
+              : MyHomePage(model: _model),
           '/login': (context) => LoginPage(),
-          '/home': (context) => MyHomePage(model: model),
+          '/home': (context) => MyHomePage(model: _model),
           '/profile': (context) => ProfileScreen(),
           '/restaurants': (context) => AllRestaurantsPage(),
           '/edit_profile': (context) => EditProfilePage(),
           '/selectTopics': (context) => SelectTopicsPage(),
-          '/my_cart': (context) => MyCartPage(model),
+          '/my_cart': (context) => MyCartPage(_model),
           '/my_orders': (context) => AllOrdersScreen(),
           '/phone_ver': (context) => LoginScreen(),
-          'add_profile' :(context) => AddProfilePicScreen()
+          'add_profile': (context) => AddProfilePicScreen()
         },
         onUnknownRoute: (RouteSettings settings) {
           return MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  MyHomePage(model: model,));
+              builder: (BuildContext context) => MyHomePage(
+                    model: _model,
+                  ));
         },
       ),
     );

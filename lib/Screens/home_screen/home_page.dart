@@ -5,11 +5,12 @@ import 'package:gebeta_food/Screens/home_screen/pop_foods.dart';
 import 'package:gebeta_food/Screens/home_screen/rest.dart';
 import 'package:gebeta_food/constants.dart';
 import 'package:gebeta_food/scoped-models/main.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class MyHomePage extends StatefulWidget {
   final MainModel model;
   const MyHomePage({required this.model});
- 
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -23,7 +24,7 @@ class _MyHomePageState extends State<MyHomePage>
   @override
   void initState() {
     super.initState();
-    
+
     tabController = TabController(vsync: this, length: 6);
   }
 
@@ -57,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("Profile"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/profile');
+                      Navigator.pushNamed(context, '/profile');
                     },
                   ),
                   ListTile(
@@ -67,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("My Cart"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/my_cart');
+                      Navigator.pushNamed(context, '/my_cart');
                     },
                   ),
                   ListTile(
@@ -77,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("Settings"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/profile');
+                      Navigator.pushNamed(context, '/profile');
                     },
                   ),
                   ListTile(
@@ -87,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("Orders"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/my_orders');
+                      Navigator.pushNamed(context, '/my_orders');
                     },
                   ),
                   ListTile(
@@ -97,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("Favorites"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/my_favorites');
+                      Navigator.pushNamed(context, '/my_favorites');
                     },
                   ),
                   ListTile(
@@ -105,21 +106,26 @@ class _MyHomePageState extends State<MyHomePage>
                       Icons.restaurant_outlined,
                       color: gsecondaryColor,
                     ),
-                    title: Text("View All Restaurants"),
+                    title: Text("List of Restaurants"),
                     onTap: () {
-                      Navigator.pushReplacementNamed(context, '/restaurants');
+                      Navigator.pushNamed(context, '/restaurants');
                     },
                   ),
-                  ListTile(
-                    leading: Icon(
-                      Icons.logout_outlined,
-                      color: gsecondaryColor,
-                    ),
-                    title: Text("Sign Out"),
-                    onTap: () {
-                      Navigator.pushReplacementNamed(context, '/login');
-                    },
-                  ),
+                  ScopedModelDescendant(
+                      builder: (context, Widget child, MainModel model) {
+                    return ListTile(
+                      leading: Icon(
+                        Icons.logout_outlined,
+                        color: gsecondaryColor,
+                      ),
+                      title: Text("Sign Out"),
+                      onTap: () {
+                        model.logout();
+                        Navigator.pushReplacementNamed(context, '/');
+                        
+                      },
+                    );
+                  })
                 ],
               )
             ],
@@ -179,7 +185,7 @@ class _MyHomePageState extends State<MyHomePage>
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.pushReplacementNamed(context, '/my_cart');
+                Navigator.pushNamed(context, '/my_cart');
                 print("clicked");
               },
               icon: Icon(Icons.shopping_cart_outlined)),
