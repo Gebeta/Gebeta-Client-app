@@ -57,11 +57,11 @@ class _MyAppState extends State<MyApp> {
         ),
         debugShowCheckedModeBanner: false,
         // home: HomeScreen(),
-        // home: HomeScreen(),
+        home: AddProfilePicScreen("yael"),
         routes: {
-          '/': (context) => _model.getUser.id == ""
-              ? HomeScreen()
-              : MyHomePage(model: _model),
+          // '/': (context) => _model.getUser.id == ""
+          //     ? HomeScreen()
+          //     : MyHomePage(model: _model),
           '/login': (context) => LoginPage(),
           '/home': (context) => MyHomePage(model: _model),
           '/profile': (context) => ProfileScreen(),
@@ -70,8 +70,7 @@ class _MyAppState extends State<MyApp> {
           '/selectTopics': (context) => SelectTopicsPage(),
           '/my_cart': (context) => MyCartPage(_model),
           '/my_orders': (context) => AllOrdersScreen(),
-          '/phone_ver': (context) => LoginScreen(),
-          'add_profile': (context) => AddProfilePicScreen()
+          '/phone_ver': (context) => LoginScreen()
         },
         onUnknownRoute: (RouteSettings settings) {
           return MaterialPageRoute(

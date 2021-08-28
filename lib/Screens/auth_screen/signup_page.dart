@@ -252,7 +252,7 @@ class _SignUpPageState extends State<SignUpPage> {
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      new AddProfilePicScreen()),
+                      new AddProfilePicScreen(_formData['first_name'],)),
             );
     }
   }

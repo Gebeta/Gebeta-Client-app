@@ -3,9 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gebeta_food/constants.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:geolocator/geolocator.dart';
 
 class AddProfilePicScreen extends StatefulWidget {
-  const AddProfilePicScreen({Key? key}) : super(key: key);
+  final String name;
+  const AddProfilePicScreen(this.name);
 
   @override
   _AddProfilePicScreenState createState() => _AddProfilePicScreenState();
@@ -14,6 +17,9 @@ class AddProfilePicScreen extends StatefulWidget {
 class _AddProfilePicScreenState extends State<AddProfilePicScreen> {
   late File _imageFile;
   String imagePath = "";
+  String myLocation = "Choose your Location";
+  late double latitude = 0.0;
+  late double longtiude = 0.0;
   final picker = ImagePicker();
   bool imageUploaded = false;
   @override
@@ -32,7 +38,7 @@ class _AddProfilePicScreenState extends State<AddProfilePicScreen> {
                 padding: EdgeInsets.only(bottom: 20),
                 alignment: Alignment.topLeft,
                 child: Text(
-                  "Hi, " + "Yael",
+                  "Hi, " + widget.name,
                   style: TextStyle(
                     color: gsecondaryColor,
                     fontSize: 28,
@@ -49,13 +55,13 @@ class _AddProfilePicScreenState extends State<AddProfilePicScreen> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(top: 20,bottom: 20),
+                margin: EdgeInsets.only(top: 20, bottom: 20),
                 alignment: Alignment.center,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(100.0),
                   child: imagePath != ""
                       ? Image.file(
-                         File(imagePath),
+                          File(imagePath),
                           fit: BoxFit.cover,
                           height: 200.0,
                           width: MediaQuery.of(context).size.width * 0.5,
@@ -103,19 +109,36 @@ class _AddProfilePicScreenState extends State<AddProfilePicScreen> {
                 height: 15,
               ),
               Text(
-                "Choose your Location",
+                latitude.toString() +' , ' + longtiude.toString(),
                 style: TextStyle(
                   color: gsecondaryColor,
-                  fontSize: 20,
+                  fontSize: 15,
                 ),
               ),
+              Text(
+                myLocation,
+                style: TextStyle(
+                  color: gsecondaryColor,
+                  fontSize: 15,
+                ),
+              ),
+              SizedBox(height: 10,),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  getCurrentLocation();
+                },
+                style: TextButton.styleFrom(
+                  primary: Colors.white,
+                  padding: EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+                  backgroundColor: Colors.blue,
+                  onSurface: Colors.grey,
+                ),
                 child: Text("Choose"),
               )
             ],
           ),
           Container(
+            margin: EdgeInsets.only(top:50),
             width: MediaQuery.of(context).size.width * 0.3,
             height: 50,
             decoration: BoxDecoration(
@@ -193,5 +216,31 @@ class _AddProfilePicScreenState extends State<AddProfilePicScreen> {
             ),
           );
         });
+  }
+
+  void getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.best);
+
+    print(position.latitude);
+    print(position.longitude);
+
+    getAddresFromCoordinates(
+        Coordinates(position.latitude, position.longitude));
+  }
+
+  getAddresFromCoordinates(Coordinates coordinates) async {
+    var addresses =
+        await Geocoder.local.findAddressesFromCoordinates(coordinates);
+    var first = addresses.first;
+    print("${first.featureName} : ${first.addressLine}");
+
+    // return({"featureName":first.featureName,"addresLine":first.addressLine});
+
+    setState(() {
+      latitude =coordinates.latitude;
+      longtiude = coordinates.longitude;
+      myLocation = first.addressLine;
+    });
   }
 }
