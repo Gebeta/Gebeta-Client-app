@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gebeta_food/Screens/auth_screen/signup_page.dart';
 import 'package:gebeta_food/Screens/widgets/others/logo.dart';
+import 'package:gebeta_food/scoped-models/main.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import '../../constants.dart';
 
@@ -80,57 +82,98 @@ class _LoginScreenState extends State<LoginScreen> {
           SizedBox(
             height: 16,
           ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 30),
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [gsecondaryColor, gPrimaryColor],
-                  stops: [0, 1],
+          ScopedModelDescendant(
+              builder: (context, Widget child, MainModel model) {
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: 30),
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [gsecondaryColor, gPrimaryColor],
+                    stops: [0, 1],
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(15))),
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  primary: Colors.white,
+                  textStyle: TextStyle(
+                    fontSize: 23,
+                  ),
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(15))),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                primary: Colors.white,
-                textStyle: TextStyle(
-                  fontSize: 23,
+                onPressed: () async {
+                  setState(() {
+                    showLoading = true;
+                  });
+                  Map<String, dynamic> response = await model.checkExsitingUser(phoneController.text);
+                  if(response["UserExists"]){
+                    setState(() {
+                      showLoading = false;
+                    });
+                    _showMyDialog();
+                  }
+                  else{
+                    await _auth.verifyPhoneNumber(
+                      phoneNumber: phoneController.text,
+                      verificationCompleted: (phoneAuthCredential) async {
+                        setState(() {
+                          showLoading = false;
+                        });
+                        // signInWithPhoneAuthCredential(phoneAuthCredential);
+                      },
+                      verificationFailed: (verificationFailed) async {
+                        setState(() {
+                          showLoading = false;
+                        });
+                        print(verificationFailed.message);
+                      },
+                      codeSent: (verificationId, resendingToken) async {
+                        setState(() {
+                          showLoading = false;
+                          currentState = MobileVerficationState.OTP_FORM;
+                          this.verifiationId = verificationId;
+                        });
+                      },
+                      codeAutoRetrievalTimeout: (verificationId) async {});
+                  }
+                  
+                },
+                child: Text(
+                  "Send",
                 ),
               ),
-              onPressed: () async {
-                setState(() {
-                  showLoading = true;
-                });
-                await _auth.verifyPhoneNumber(
-                    phoneNumber: phoneController.text,
-                    verificationCompleted: (phoneAuthCredential) async {
-                      setState(() {
-                        showLoading = false;
-                      });
-                      // signInWithPhoneAuthCredential(phoneAuthCredential);
-                    },
-                    verificationFailed: (verificationFailed) async {
-                      setState(() {
-                        showLoading = false;
-                      });
-                      print(verificationFailed.message);
-                    },
-                    codeSent: (verificationId, resendingToken) async {
-                      setState(() {
-                        showLoading = false;
-                        currentState = MobileVerficationState.OTP_FORM;
-                        this.verifiationId = verificationId;
-                      });
-                    },
-                    codeAutoRetrievalTimeout: (verificationId) async {});
-              },
-              child: Text(
-                "Send",
-              ),
-            ),
-          ),
+            );
+          })
         ],
       ),
     );
   }
+
+  Future<void> _showMyDialog() async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Something happend'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: const <Widget>[
+              Text('User already Exists'),
+              Text('please Enter new phone Number.'),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Okay'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 
   void signInWithPhoneAuthCredential(
       PhoneAuthCredential phoneAuthCredential) async {
@@ -147,7 +190,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (authCredential.user != null) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SignUpPage(phoneController.text)));
+            context,
+            MaterialPageRoute(
+                builder: (context) => SignUpPage(phoneController.text)));
       }
     } on FirebaseAuthException catch (e) {
       setState(() {

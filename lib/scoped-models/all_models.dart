@@ -22,6 +22,28 @@ mixin UserModel on AllModels {
     return _authenticatedUser;
   }
 
+ Future<Map<String,dynamic>> checkExsitingUser(phoneNo) async{
+    bool exists;
+    final Map<String, dynamic> userData = {
+      "phone_no" :phoneNo
+    };
+    Uri url = Uri.parse("http://192.168.1.11:3000/auth/checkUser");
+
+    final http.Response response = await http.post(url,
+        body: json.encode(userData),
+        headers: {'Content-Type': 'application/json'});
+
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        print(responseData);
+        if(responseData['message'] == "UserExists"){
+          return {"UserExists" : true};
+        }
+        else{
+          return {"UserExists" : true};
+        }
+
+  }
+
   Future<Map<String, dynamic>> signUp(
       String id,
       String fname,
@@ -49,6 +71,15 @@ mixin UserModel on AllModels {
     final Map<String, dynamic> responseData = json.decode(response.body);
     print(responseData);
 
+     _authenticatedUser = User(
+        id: responseData['_id'], email: email, token: responseData['token']);
+
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    preferences.setString("token", responseData['token']);
+    preferences.setString("userEmail", email);
+    preferences.setString("userId", responseData['_id']);
+
     return {'success': true, 'message': "signed up"};
   }
 
@@ -74,7 +105,7 @@ mixin UserModel on AllModels {
     preferences.setString("userEmail", email);
     preferences.setString("userId", responseData['_id']);
 
-    return {'success': true, 'message': "signed up"};
+    return {'success': true, 'message': "logged in"};
   }
 
   void autoAuthenthicate() async {
