@@ -25,7 +25,6 @@ class _MyCartPageState extends State<MyCartPage> {
     // widget.model.totalPrice(widget.model.getCartList);
   }
 
-  
   @override
   Widget build(BuildContext context) {
     double totalAmountX = totalPrice(widget.model);
@@ -71,24 +70,28 @@ class _MyCartPageState extends State<MyCartPage> {
         ],
       ),
       bottomSheet: Container(
-        height: 60.0,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(color: gsecondaryColor, boxShadow: [
-          BoxShadow(
-              color: Colors.black26, offset: Offset(0, -1), blurRadius: 6.0)
-        ]),
-        child: TextButton(
-          onPressed: () {},
-          child: Text(
-            "Checkout",
-            style: TextStyle(
-                color: whiteColor,
-                fontSize: 22.0,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2.0),
-          ),
-        ),
-      ),
+          height: 60.0,
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(color: gsecondaryColor, boxShadow: [
+            BoxShadow(
+                color: Colors.black26, offset: Offset(0, -1), blurRadius: 6.0)
+          ]),
+          child: ScopedModelDescendant(
+              builder: (context, Widget child, MainModel model) {
+            return TextButton(
+              onPressed: () {
+                model.createOrder("id", "restaurantId", "clientId", totalAmount, widget.model.getCartList);
+              },
+              child: Text(
+                "Checkout",
+                style: TextStyle(
+                    color: whiteColor,
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2.0),
+              ),
+            );
+          })),
     );
   }
 
@@ -150,18 +153,15 @@ class _MyCartPageState extends State<MyCartPage> {
     );
   }
 
-   double totalPrice(MainModel model) {
-    
+  double totalPrice(MainModel model) {
     List<Cart> cartItems = model.getCartList;
     for (int i = 0; i < cartItems.length; i++) {
       setState(() {
-          totalAmount = totalAmount + cartItems[i].price * cartItems[i].quantity;
-          // print(totalAmount);
+        totalAmount = totalAmount + cartItems[i].price * cartItems[i].quantity;
+        // print(totalAmount);
       });
-
     }
 
     return totalAmount;
   }
-
 }

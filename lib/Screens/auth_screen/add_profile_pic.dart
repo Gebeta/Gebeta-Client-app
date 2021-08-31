@@ -34,9 +34,7 @@ class _AddProfilePicScreenState extends State<AddProfilePicScreen> {
         children: [
           Column(
             children: [
-              Container(
-                padding: EdgeInsets.only(bottom: 20),
-                alignment: Alignment.topLeft,
+              Center(
                 child: Text(
                   "Hi, " + widget.name,
                   style: TextStyle(

@@ -213,22 +213,34 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                           builder: (context, Widget child, MainModel model) {
                         return ElevatedButton(
                           onPressed: () {
-                            if(model.checkingItem(widget.item.id)== true){
-                              print("you can't add");
-                            }
-                            else{
+                            if (model.checkingItem(widget.item.id) == true) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text("Item already selected"),
+                                      actions: [
+                                        TextButton(onPressed: (){
+                                          Navigator.pop(context);
+                                        }, child: Text("okay"))
+                                      ],
+                                    );
+                                  });
+                            } else {
                               model.addToCart(
                                 widget.item.id,
                                 widget.item.name,
                                 widget.item.imageUrl[0],
                                 widget.item.price.toDouble(),
-                                count);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => new MyCartPage(model)));
+                                count,
+                                widget.item.description,
+                              );
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          new MyCartPage(model)));
                             }
-                            
                           },
                           child: Text(
                               "Add (${count.toString()}) to Cart - ${count * widget.item.price}"),
@@ -260,7 +272,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
     List<NetworkImage> networkImages = [];
     for (var i = 0; i < item.imageUrl.length; i++) {
       networkImages.add(NetworkImage(
-          'http://192.168.1.11:3000/images/${item.id}/${item.imageUrl[i]}'));
+          'http://192.168.8.142:3000/images/${item.id}/${item.imageUrl[i]}'));
     }
     return networkImages;
   }

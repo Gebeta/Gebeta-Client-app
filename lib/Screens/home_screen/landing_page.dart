@@ -60,7 +60,7 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
     'Tacos',
     'sandwiches',
     'Noodles'
-    'waffles',
+        'waffles',
     'pancakes',
     'macchiato',
     'hot dog',
@@ -162,7 +162,10 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
                 ),
               ),
             ),
-            _buildButton(_selected),
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: _buildButton(_selected),
+            ),
           ],
         ),
         Wrap(
@@ -184,7 +187,13 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
         onPressed: () {
           Navigator.pushReplacementNamed(context, '/home');
         },
-        label: Text("next"),
+        style: ElevatedButton.styleFrom(
+          primary: gPrimaryColor,
+        ),
+        label: Padding(
+          padding: const EdgeInsets.only(right: 4),
+          child: Text("next"),
+        ),
         icon: Icon(Icons.navigate_next),
       );
     } else {

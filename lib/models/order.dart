@@ -1,18 +1,22 @@
 import 'package:gebeta_food/models/item.dart';
-import 'package:gebeta_food/models/user.dart';
+
 
 class Order {
   final String id;
-  final String date;
-  final int quantity;
-  final Item food;
-  final User user;
+  final String restaurantId;
+  final String clientId;
+  final double totalPrice;
+  final bool isAcitive;
+  final List<Item> items;
+  late String date;
 
   Order({
     required this.id,
-    required this.date,
-    required this.quantity,
-    required this.food,
-    required this.user,
+    required this.restaurantId,
+    required this.clientId,
+    required this.totalPrice,
+    required this.isAcitive,
+    required this.items,
+    required this.date
   });
 }

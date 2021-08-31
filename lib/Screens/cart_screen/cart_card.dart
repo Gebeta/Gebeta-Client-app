@@ -57,7 +57,7 @@ class _CartCardState extends State<CartCard> {
                   child: Image(
                     height: 150.0,
                     width: 150.0,
-                    image: NetworkImage('http://192.168.1.11:3000/images/${model.getCartList[widget.cartIndex].id}/${model.getCartList[widget.cartIndex].image}'), //networkImage
+                    image: NetworkImage('http://192.168.8.142:3000/images/${model.getCartList[widget.cartIndex].id}/${model.getCartList[widget.cartIndex].image}'), //networkImage
                     fit: BoxFit.cover,
                   ),
                 ),

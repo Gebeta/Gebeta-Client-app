@@ -57,11 +57,11 @@ class _MyAppState extends State<MyApp> {
         ),
         debugShowCheckedModeBanner: false,
         // home: HomeScreen(),
-        home: AddProfilePicScreen("yael"),
+        // home: AddProfilePicScreen("yael"),
         routes: {
-          // '/': (context) => _model.getUser.id == ""
-          //     ? HomeScreen()
-          //     : MyHomePage(model: _model),
+          '/': (context) => _model.getUser.id == ""
+              ? HomeScreen()
+              : MyHomePage(model: _model),
           '/login': (context) => LoginPage(),
           '/home': (context) => MyHomePage(model: _model),
           '/profile': (context) => ProfileScreen(),

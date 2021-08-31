@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 import 'package:gebeta_food/models/cart.dart';
 import 'package:gebeta_food/models/item.dart';
+import 'package:gebeta_food/models/order.dart';
 import 'package:gebeta_food/models/restaurant.dart';
 import 'package:gebeta_food/models/user.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -22,26 +24,22 @@ mixin UserModel on AllModels {
     return _authenticatedUser;
   }
 
- Future<Map<String,dynamic>> checkExsitingUser(phoneNo) async{
+  Future<Map<String, dynamic>> checkExsitingUser(phoneNo) async {
     bool exists;
-    final Map<String, dynamic> userData = {
-      "phone_no" :phoneNo
-    };
-    Uri url = Uri.parse("http://192.168.1.11:3000/auth/checkUser");
+    final Map<String, dynamic> userData = {"phone_no": phoneNo};
+    Uri url = Uri.parse("http://192.168.8.142:3000/auth/checkUser");
 
     final http.Response response = await http.post(url,
         body: json.encode(userData),
         headers: {'Content-Type': 'application/json'});
 
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        print(responseData);
-        if(responseData['message'] == "UserExists"){
-          return {"UserExists" : true};
-        }
-        else{
-          return {"UserExists" : true};
-        }
-
+    final Map<String, dynamic> responseData = json.decode(response.body);
+    print(responseData);
+    if (responseData['message'] == "UserExists") {
+      return {"UserExists": true};
+    } else {
+      return {"UserExists": false};
+    }
   }
 
   Future<Map<String, dynamic>> signUp(
@@ -63,7 +61,7 @@ mixin UserModel on AllModels {
       "phone_no": phoneNo,
       "address": address
     };
-    Uri url = Uri.parse("http://192.168.1.11:3000/auth/clientsignup");
+    Uri url = Uri.parse("http://192.168.8.142:3000/auth/clientsignup");
     final http.Response response = await http.post(url,
         body: json.encode(userData),
         headers: {'Content-Type': 'application/json'});
@@ -71,7 +69,7 @@ mixin UserModel on AllModels {
     final Map<String, dynamic> responseData = json.decode(response.body);
     print(responseData);
 
-     _authenticatedUser = User(
+    _authenticatedUser = User(
         id: responseData['_id'], email: email, token: responseData['token']);
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -89,7 +87,7 @@ mixin UserModel on AllModels {
       "password": password,
     };
 
-    Uri url = Uri.parse("http://192.168.1.11:3000/auth/clientlogin");
+    Uri url = Uri.parse("http://192.168.8.142:3000/auth/clientlogin");
     final http.Response response = await http.post(url,
         body: json.encode(authData),
         headers: {'Content-Type': 'application/json'});
@@ -138,7 +136,7 @@ mixin RestaurantModel on AllModels {
   }
 
   Future<Null> getRestaurants() {
-    Uri url = Uri.parse("http://192.168.1.11:3000/restaurant");
+    Uri url = Uri.parse("http://192.168.8.142:3000/restaurant");
     return http.get(url).then((http.Response response) {
       final List<Restaurant> fetchedRestaurants = [];
 
@@ -168,7 +166,7 @@ mixin ItemModel on AllModels {
   }
 
   Future<Null> fetchItems() {
-    Uri url = Uri.parse("http://192.168.1.11:3000/items");
+    Uri url = Uri.parse("http://192.168.8.142:3000/items");
     return http.get(url).then((http.Response response) {
       final List<Item> fetchedItems = [];
 
@@ -211,22 +209,49 @@ mixin CartModel on AllModels {
     return _isILike;
   }
 
-  // double totalPrice(List<Cart> cartItems) {
-  //   for (int i = 0; i < cartItems.length; i++) {
-  //     totalAmount = totalAmount + cartItems[i].price * cartItems[i].quantity;
-  //     notifyListeners();
-  //   }
-  //   return totalAmount;
-  // }
-
-  addToCart(id, name, image, price, quantity) {
+  addToCart(id, name, image, price, quantity, description) {
     Cart cartItem = Cart(
       id: id,
       name: name,
+      description: description,
       image: image,
       price: price,
       quantity: quantity,
     );
     _cart.add(cartItem);
+  }
+
+  removeFromCart(int cartIndex){
+    _cart.removeAt(cartIndex);
+    notifyListeners();
+  }
+}
+
+mixin OrderModel on AllModels {
+  createOrder(String id, String restaurantId, String clientId,
+      double totalPrice, List<Cart> cartItems) {
+    List<Item> items = [];
+    cartItems.forEach((element) {
+      items.add(Item(
+          id: id,
+          imageUrl: [element.image],
+          description: element.description,
+          name: element.name,
+          price: element.price,
+          menuStatus: true,
+          quantity: element.quantity));
+    });
+
+    Order order = Order(
+        id: id,
+        restaurantId: restaurantId,
+        clientId: clientId,
+        totalPrice: totalPrice,
+        isAcitive: true,
+        items: items,
+        date: DateFormat('dd-MM-yyyy').format(new DateTime.now()) +
+            ' ' +
+            DateFormat('kk:mm:a').format(new DateTime.now()));
+    print(order.items.length);
   }
 }
