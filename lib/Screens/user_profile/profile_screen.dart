@@ -1,9 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:gebeta_food/constants.dart';
+import 'package:gebeta_food/models/profile.dart';
+import 'package:gebeta_food/scoped-models/main.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+class ProfileScreen extends StatefulWidget {
+  final MainModel model;
+  ProfileScreen(this.model);
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
 
+class _ProfileScreenState extends State<ProfileScreen> {
+  late Profile response;
+  @override
+  void initState() {
+    response = widget.model.getUserProfile;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +90,7 @@ class ProfileScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Client Name",
+                                  response.firstName + " " + response.lastName,
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold),
@@ -86,14 +99,14 @@ class ProfileScreen extends StatelessWidget {
                                   height: 10,
                                 ),
                                 Text(
-                                  "test@test.com",
+                                  response.email,
                                   style: TextStyle(
                                       fontSize: 16,
                                       color: gTextLightColor,
                                       fontWeight: FontWeight.w300),
                                 ),
                                 Text(
-                                  "Phone No",
+                                  response.phoneNo,
                                   style: TextStyle(
                                       fontSize: 16,
                                       color: gTextLightColor,

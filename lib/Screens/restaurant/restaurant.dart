@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:gebeta_food/Screens/review_screen/reviews.dart';
 import 'package:gebeta_food/constants.dart';
 import 'package:gebeta_food/models/restaurant.dart';
+import 'package:gebeta_food/scoped-models/main.dart';
 
 class RestaurantScreen extends StatefulWidget {
   final Restaurant restaurant;
+  final MainModel model;
 
-  RestaurantScreen(this.restaurant);
+  RestaurantScreen(this.restaurant, this.model);
 
   @override
   _RestaurantScreenState createState() => _RestaurantScreenState();
@@ -96,7 +99,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                 child: Image(
                   height: MediaQuery.of(context).size.height * 0.3,
                   width: MediaQuery.of(context).size.width,
-                  image: AssetImage(""),
+                  image: AssetImage("assets/images/food.png"),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -147,7 +150,9 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                       fontSize: 12,
                       fontWeight: FontWeight.w300),
                 ),
-                TextButton(onPressed: () {}, child: Text("see Reviews"))
+                TextButton(onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>AllReviews(widget.model,widget.restaurant.name)));
+                }, child: Text("see Reviews"))
               ],
             ),
           ),

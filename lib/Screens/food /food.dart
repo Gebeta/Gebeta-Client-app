@@ -272,7 +272,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
     List<NetworkImage> networkImages = [];
     for (var i = 0; i < item.imageUrl.length; i++) {
       networkImages.add(NetworkImage(
-          'http://192.168.8.142:3000/images/${item.id}/${item.imageUrl[i]}'));
+          'http://192.168.1.9:3000/images/${item.id}/${item.imageUrl[i]}'));
     }
     return networkImages;
   }

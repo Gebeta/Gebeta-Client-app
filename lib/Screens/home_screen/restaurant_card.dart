@@ -24,7 +24,7 @@ class RestaurantCard extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => new RestaurantScreen(restaurantModel)),
+                  builder: (context) => new RestaurantScreen(restaurantModel,model)),
             );
           },
           child: Container(

@@ -26,11 +26,11 @@ Widget _listItem(BuildContext context, String imgPath, String restaurantName,
             email: "email",
             rating: rating,
             isApproved: isOpen);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => new RestaurantScreen(restaurant)),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //       builder: (context) => new RestaurantScreen(restaurant)),
+        // );
       },
       child: Container(
         decoration: BoxDecoration(

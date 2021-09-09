@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:ffi';
+import 'package:gebeta_food/models/profile.dart';
+import 'package:gebeta_food/models/rating.dart';
 import 'package:intl/intl.dart';
 
 import 'package:gebeta_food/models/cart.dart';
@@ -13,7 +16,19 @@ import 'package:http/http.dart' as http;
 mixin AllModels on Model {
   List<Restaurant> _restaurants = [];
   List<Item> _item = [];
+  List<Order> _activeOrder = [];
+  List<Order> _order = [];
+  List<Order> _completedOrder = [];
+  List<Rating> _ratings = [];
   User _authenticatedUser = User(id: "", email: "", token: "");
+  Profile userProfile = Profile(
+      id: "",
+      firstName: '',
+      lastName: '',
+      email: '',
+      phoneNo: '',
+      address: '',
+      password: '');
   // double totalAmount = 0.0;
 
   List<Cart> _cart = [];
@@ -24,10 +39,14 @@ mixin UserModel on AllModels {
     return _authenticatedUser;
   }
 
+  Profile get getUserProfile {
+    return userProfile;
+  }
+
   Future<Map<String, dynamic>> checkExsitingUser(phoneNo) async {
     bool exists;
     final Map<String, dynamic> userData = {"phone_no": phoneNo};
-    Uri url = Uri.parse("http://192.168.8.142:3000/auth/checkUser");
+    Uri url = Uri.parse("http://192.168.1.9:3000/auth/checkUser");
 
     final http.Response response = await http.post(url,
         body: json.encode(userData),
@@ -61,7 +80,7 @@ mixin UserModel on AllModels {
       "phone_no": phoneNo,
       "address": address
     };
-    Uri url = Uri.parse("http://192.168.8.142:3000/auth/clientsignup");
+    Uri url = Uri.parse("http://192.168.1.9:3000/auth/clientsignup");
     final http.Response response = await http.post(url,
         body: json.encode(userData),
         headers: {'Content-Type': 'application/json'});
@@ -69,6 +88,15 @@ mixin UserModel on AllModels {
     final Map<String, dynamic> responseData = json.decode(response.body);
     print(responseData);
 
+    userProfile = Profile(
+      id: responseData['id'],
+      firstName: responseData['first_name'],
+      lastName: responseData['last_name'],
+      email: responseData['email'],
+      phoneNo: responseData['phone_no'],
+      address: responseData['address'],
+      password: responseData['password'],
+    );
     _authenticatedUser = User(
         id: responseData['_id'], email: email, token: responseData['token']);
 
@@ -87,13 +115,22 @@ mixin UserModel on AllModels {
       "password": password,
     };
 
-    Uri url = Uri.parse("http://192.168.8.142:3000/auth/clientlogin");
+    Uri url = Uri.parse("http://192.168.1.9:3000/auth/clientlogin");
     final http.Response response = await http.post(url,
         body: json.encode(authData),
         headers: {'Content-Type': 'application/json'});
 
     final Map<String, dynamic> responseData = json.decode(response.body);
     print(responseData);
+    userProfile = Profile(
+      id: responseData['id'],
+      firstName: responseData['first_name'],
+      lastName: responseData['last_name'],
+      email: responseData['email'],
+      phoneNo: responseData['phone_no'],
+      address: responseData['address'],
+      password: responseData['password'],
+    );
     _authenticatedUser = User(
         id: responseData['_id'], email: email, token: responseData['token']);
 
@@ -120,6 +157,33 @@ mixin UserModel on AllModels {
     }
   }
 
+  //  Future<Profile> getProfile(String id) async {
+  //   Uri url =
+  //       Uri.parse("http://192.168.1.9:3000/client/$id");
+  //   final http.Response response =
+  //       await http.get(url, headers: {'Content-Type': 'application/json'});
+  //   if (response.statusCode == 200) {
+  //     final List<dynamic> profile = json.decode(response.body);
+  //     print(profile[0]);
+  //     Profile userProfile = Profile(
+  //       id: id,
+  //       firstName: profile[0]['first_name'],
+  //       lastName: profile[0]['last_name'],
+  //       email: profile[0]['email'],
+  //       phoneNo: profile[0]['phone_no'],
+  //       address: profile[0]['address'],
+  //       password: profile[0]['password'],
+  //     );
+  //     print(userProfile.email);
+
+  //     // return Profile.fromJson(jsonDecode(response.body));
+  //     return userProfile;
+  //   } else {
+  //     // return {'success': false, 'Profile': Null};
+  //     throw Exception('Failed to load album');
+  //   }
+  // }
+
   void logout() async {
     _authenticatedUser = User(id: "", email: "", token: "");
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -136,7 +200,7 @@ mixin RestaurantModel on AllModels {
   }
 
   Future<Null> getRestaurants() {
-    Uri url = Uri.parse("http://192.168.8.142:3000/restaurant");
+    Uri url = Uri.parse("http://192.168.1.9:3000/restaurant");
     return http.get(url).then((http.Response response) {
       final List<Restaurant> fetchedRestaurants = [];
 
@@ -149,7 +213,7 @@ mixin RestaurantModel on AllModels {
             address: "summit",
             phoneNo: "+251925262988",
             email: data['email'],
-            rating: data['rating'].toDouble(),
+            rating: 3,
             isApproved: data['is_approved']);
         fetchedRestaurants.add(restaurant);
       });
@@ -166,7 +230,7 @@ mixin ItemModel on AllModels {
   }
 
   Future<Null> fetchItems() {
-    Uri url = Uri.parse("http://192.168.8.142:3000/items");
+    Uri url = Uri.parse("http://192.168.1.9:3000/items");
     return http.get(url).then((http.Response response) {
       final List<Item> fetchedItems = [];
 
@@ -221,37 +285,198 @@ mixin CartModel on AllModels {
     _cart.add(cartItem);
   }
 
-  removeFromCart(int cartIndex){
+  removeFromCart(int cartIndex) {
     _cart.removeAt(cartIndex);
     notifyListeners();
   }
 }
 
 mixin OrderModel on AllModels {
-  createOrder(String id, String restaurantId, String clientId,
-      double totalPrice, List<Cart> cartItems) {
-    List<Item> items = [];
+  List<Order> get getOrderList {
+    return List.from(_order);
+  }
+
+  List<Order> get getActiveOrderList {
+    return List.from(_activeOrder);
+  }
+
+  List<Order> get getCompletedOrderList {
+    return List.from(_completedOrder);
+  }
+
+  Future<Null> createOrder(String id, String restaurantId, String clientId,
+      double totalPrice, List<Cart> cartItems) async {
+    List<dynamic> items = [];
+    // location object to be added
     cartItems.forEach((element) {
-      items.add(Item(
-          id: id,
-          imageUrl: [element.image],
-          description: element.description,
-          name: element.name,
-          price: element.price,
-          menuStatus: true,
-          quantity: element.quantity));
+      items.add({
+        "id": element.id,
+        "imageUrl": [element.image],
+        "description": element.description,
+        "name": element.name,
+        "price": element.price,
+        "menuStatus": true,
+        "quantity": element.quantity
+      });
     });
 
-    Order order = Order(
-        id: id,
-        restaurantId: restaurantId,
-        clientId: clientId,
-        totalPrice: totalPrice,
-        isAcitive: true,
-        items: items,
-        date: DateFormat('dd-MM-yyyy').format(new DateTime.now()) +
-            ' ' +
-            DateFormat('kk:mm:a').format(new DateTime.now()));
-    print(order.items.length);
+    final Map<String, dynamic> orderData = {
+      "restaurantId": restaurantId,
+      "clientId": clientId,
+      "totalPrice": totalPrice,
+      "isAcitive": true,
+      "items": items,
+    };
+
+    Uri url = Uri.parse("http://192.168.1.9:3000/order");
+
+    final http.Response response = await http.post(url,
+        body: json.encode(orderData),
+        headers: {'Content-Type': 'application/json'});
+
+    final Map<String, dynamic> responseData = json.decode(response.body);
+    print(responseData);
+
+    notifyListeners();
+  }
+
+  getActiveOrders() async {
+    Uri url = Uri.parse("http://192.168.1.9:3000/order/activeorders");
+    return http.get(url).then((http.Response response) {
+      final List<Order> fetchedOrders = [];
+
+      final List<dynamic> orderList = json.decode(response.body);
+      print(orderList);
+      orderList.forEach((dynamic data) {
+        Order order = Order(
+          id: data['id'],
+          restaurantId: data['restaurant_id'],
+          clientId: data['client_id'],
+          totalPrice: data['totalPrice'],
+          isAcitive: data['isAcitive'],
+          items: data['items'],
+        );
+        fetchedOrders.add(order);
+      });
+      _activeOrder = fetchedOrders;
+      print("OLA id " + fetchedOrders[0].id);
+      notifyListeners();
+    });
+  }
+
+  getCompletedOrders() async {
+    Uri url = Uri.parse("http://192.168.1.9:3000/order/completedorders");
+    return http.get(url).then((http.Response response) {
+      final List<Order> fetchedOrders = [];
+
+      final List<dynamic> orderList = json.decode(response.body);
+      print(orderList);
+      orderList.forEach((dynamic data) {
+        Order order = Order(
+          id: data['id'],
+          restaurantId: data['restaurant_id'],
+          clientId: data['client_id'],
+          totalPrice: data['totalPrice'],
+          isAcitive: data['isAcitive'],
+          items: data['items'],
+        );
+        fetchedOrders.add(order);
+      });
+      _completedOrder = fetchedOrders;
+      print("OLA id " + fetchedOrders[0].id);
+      notifyListeners();
+    });
+
+    // final Order newProduct = Order(
+    //     id: responseData['name'],
+    //     title: title,
+    //     description: description,
+    //     image: image,
+    //     price: price,
+    //     userEmail: _authenticatedUser.email,
+    //     userId: _authenticatedUser.id);
+    // _products.add(newProduct);
+  }
+}
+
+mixin ReviewModel on AllModels {
+  List<Rating> get fetchReviews {
+    return List.from(_ratings);
+  }
+
+  Future<Null> getReview() {
+    Uri url = Uri.parse("http://192.168.1.9:3000/rate");
+    return http.get(url).then((http.Response response) {
+      final List<Rating> fetchedRates = [];
+
+      final List<dynamic> rateList = json.decode(response.body);
+      print(rateList);
+      rateList.forEach((dynamic data) {
+        Rating restaurant = Rating(
+            id: data['id'],
+            comment: data['comment'],
+            rating: data['rating'].toDouble(),
+            likes: data['likes']);
+
+        fetchedRates.add(restaurant);
+      });
+      _ratings = fetchedRates;
+      // print("OLA" + _restaurants.length.toString());
+      notifyListeners();
+    });
+  }
+
+  Future<Null> createReview(String restaurantId, String clientId,
+      String orderId, double rating, String comment) async {
+    Uri url = Uri.parse("http://192.168.1.9:3000/rate");
+
+    final Map<String, dynamic> rateData = {
+      "restaurantd": restaurantId,
+      "clientId": clientId,
+      "order_id": orderId,
+      "rating": rating,
+      "comment": comment,
+    };
+
+    final http.Response response = await http.post(url,
+        body: json.encode(rateData),
+        headers: {'Content-Type': 'application/json'});
+
+    final Map<String, dynamic> responseData = json.decode(response.body);
+    print(responseData);
+  }
+
+  fetchAllReviews() {
+    Uri url = Uri.parse("http://192.168.1.9:3000/rate");
+    return http.get(url).then((http.Response response) {
+      final List<Rating> fetchedReviews = [];
+
+      final List<dynamic> orderList = json.decode(response.body);
+      print(orderList);
+      orderList.forEach((dynamic data) {
+        Rating order = Rating(
+            id: data['id'],
+            comment: data['comment'],
+            rating: data['rating'],
+            likes: data['likes']);
+
+        fetchedReviews.add(order);
+      });
+      _ratings = fetchedReviews;
+      print("OLA id " + fetchedReviews[0].id);
+      notifyListeners();
+    });
+  }
+
+  likeAReview(String id) {
+    Uri url = Uri.parse('http://192.168.1.9:3000/rate/' + id);
+    return http.put(url).then((http.Response response) => {
+          print(response)
+          // // Map<String, dynamic> responseData = json.decode(response.body);
+          // Rating updatedReview = Rating(id: id, comment: responseData['name'], rating: esponseData['name'], likes: esponseData['name'])
+
+          // _ratings[index] = updatedReview;
+          // notifyListeners();
+        });
   }
 }

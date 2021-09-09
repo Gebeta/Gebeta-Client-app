@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:gebeta_food/constants.dart';
+import 'package:gebeta_food/models/profile.dart';
+import 'package:gebeta_food/scoped-models/main.dart';
 
-class EditProfilePage extends StatelessWidget {
-  const EditProfilePage({Key? key}) : super(key: key);
+class EditProfilePage extends StatefulWidget {
+  final MainModel model;
+  const EditProfilePage(this.model);
 
+  @override
+  _EditProfilePageState createState() => _EditProfilePageState();
+}
+
+class _EditProfilePageState extends State<EditProfilePage> {
+  late Profile userProfile;
+  @override
+  void initState() {
+    userProfile = widget.model.getUserProfile;
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,10 +113,10 @@ class EditProfilePage extends StatelessWidget {
                   child: ListView(
                 shrinkWrap: true,
                 children: [
-                  customInputFiled(context, "Full Name", "Client Name"),
-                  customInputFiled(context, "Password", "Client Password"),
-                  customInputFiled(context, "Phone No", "Client phone no"),
-                  customInputFiled(context, "Email", "Client Email"),
+                  customInputFiled(context, "First Name", userProfile.firstName),
+                  customInputFiled(context, "Last Name", userProfile.lastName),
+                  customInputFiled(context, "Phone No", userProfile.phoneNo),
+                  customInputFiled(context, "Email",userProfile.email),
                   customInputFiled(context, "Gender", "Client Gender"),
                 ],
               ))

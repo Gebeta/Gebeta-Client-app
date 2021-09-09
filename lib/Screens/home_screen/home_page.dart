@@ -22,9 +22,9 @@ class _MyHomePageState extends State<MyHomePage>
   late TabController tabController;
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
-
+    // Map<String, dynamic> response = await widget.model.getProfile(widget.model.getUser.id);
     tabController = TabController(vsync: this, length: 6);
   }
 

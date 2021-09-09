@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gebeta_food/Screens/cart_screen/cart_card.dart';
+import 'package:gebeta_food/Screens/payment/payment.dart';
 import 'package:gebeta_food/constants.dart';
 import 'package:gebeta_food/models/cart.dart';
 import 'package:gebeta_food/scoped-models/main.dart';
@@ -21,13 +22,14 @@ class _MyCartPageState extends State<MyCartPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    totalAmount = 0.0;
     widget.model.getCartList;
+    totalPrice(widget.model);
     // widget.model.totalPrice(widget.model.getCartList);
   }
 
   @override
   Widget build(BuildContext context) {
-    double totalAmountX = totalPrice(widget.model);
     double shippingPrice = 200.0;
     return Scaffold(
       backgroundColor: Color(0xfff9efeb),
@@ -56,9 +58,63 @@ class _MyCartPageState extends State<MyCartPage> {
                 child: Column(
                   children: [
                     // Text("sub total")
-                    _buildRow("Sub Total", totalAmountX),
-                    _buildRow("Shipping", shippingPrice),
-                    _buildRow("Total", totalAmountX + shippingPrice),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Sub Total",
+                            style:
+                                TextStyle(fontSize: 19, color: gTextLightColor),
+                          ),
+                          Text(
+                            totalAmount.toString(),
+                            style:
+                                TextStyle(fontSize: 16, color: gTextLightColor),
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Shipping",
+                            style:
+                                TextStyle(fontSize: 19, color: gTextLightColor),
+                          ),
+                          Text(
+                            shippingPrice.toString(),
+                            style:
+                                TextStyle(fontSize: 16, color: gTextLightColor),
+                          )
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Total",
+                            style:
+                                TextStyle(fontSize: 19, color: gTextLightColor),
+                          ),
+                          Text(
+                            (totalAmount + shippingPrice).toString(),
+                            style:
+                                TextStyle(fontSize: 16, color: gTextLightColor),
+                          )
+                        ],
+                      ),
+                    )
+                    // _buildRow("Sub Total", totalAmount),
+                    // _buildRow("Shipping", shippingPrice),
+                    // _buildRow("Total", totalAmount + shippingPrice),
                   ],
                 ),
               ),
@@ -80,7 +136,12 @@ class _MyCartPageState extends State<MyCartPage> {
               builder: (context, Widget child, MainModel model) {
             return TextButton(
               onPressed: () {
-                model.createOrder("id", "restaurantId", "clientId", totalAmount, widget.model.getCartList);
+                model.createOrder("", "611a2969aa2f6b4956fed445", model.getUser.id, totalAmount + shippingPrice,
+                    widget.model.getCartList);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => new PaymentOptions()));
               },
               child: Text(
                 "Checkout",
@@ -95,29 +156,44 @@ class _MyCartPageState extends State<MyCartPage> {
     );
   }
 
-  Widget _buildRow(String label, double price) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: 19, color: gTextLightColor),
-          ),
-          Text(
-            price.toString(),
-            style: TextStyle(fontSize: 16, color: gTextLightColor),
-          )
-        ],
-      ),
-    );
-  }
+  // Widget _buildRow(String label, double price) {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(top: 8.0),
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //       children: [
+  //         Text(
+  //           label,
+  //           style: TextStyle(fontSize: 19, color: gTextLightColor),
+  //         ),
+  //         Text(
+  //           price.toString(),
+  //           style: TextStyle(fontSize: 16, color: gTextLightColor),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildCartList(List<Cart> cartItems) {
+    if (cartItems.length == 0) {
+      return Container(
+        margin: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+        child: Row(
+          children: [
+            Text("Nothing in your cart"),
+            TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "/home");
+                },
+                child: Text("please add items"))
+          ],
+        ),
+      );
+    }
     return ListView.builder(
       shrinkWrap: true,
-      itemBuilder: (BuildContext context, int index) => CartCard(index),
+      itemBuilder: (BuildContext context, int index) => buildCartCard(index),
       itemCount: cartItems.length,
     );
     // return Column(
@@ -163,5 +239,121 @@ class _MyCartPageState extends State<MyCartPage> {
     }
 
     return totalAmount;
+  }
+
+  Widget buildCartCard(cartIndex) {
+    return ScopedModelDescendant<MainModel>(
+      builder: (context, Widget child, MainModel model) {
+        Cart cartItem = model.getCartList[cartIndex];
+        return Container(
+          margin: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+          height: 120.0,
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(12.0)),
+          child: Stack(
+            children: [
+              ScopedModelDescendant(
+                  builder: (context, Widget child, MainModel model) {
+                return Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Container(
+                      child: IconButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                model.removeFromCart(cartIndex);
+                                              });
+                                              model.removeFromCart(cartIndex);
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("Yes")),
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("No"))
+                                      ],
+                                      title: Text(
+                                        "Are you sure",
+                                      ));
+                                });
+                          },
+                          icon: Icon(
+                            Icons.close,
+                            size: 18,
+                            color: gPrimaryColor,
+                          ))),
+                );
+              }),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        bottomLeft: Radius.circular(12)),
+                    child: Image(
+                      height: 150.0,
+                      width: 150.0,
+                      image: NetworkImage(
+                          'http://192.168.1.9:3000/images/${model.getCartList[cartIndex].id}/${model.getCartList[cartIndex].image}'), //networkImage
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(cartItem.name),
+                      Text(cartItem.price.toString())
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            if (cartItem.quantity > 1) {
+                              cartItem.quantity--;
+                            }
+                          });
+                          // Navigator.pushNamed(context, "/my_cart");
+                        },
+                        icon: Icon(Icons.remove_circle),
+                        color: gsecondaryColor,
+                        iconSize: 27,
+                      ),
+                      Text(cartItem.quantity.toString(),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: "Montserrat",
+                          )),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            cartItem.quantity++;
+                          });
+                        },
+                        icon: Icon(Icons.add_circle),
+                        color: gsecondaryColor,
+                        iconSize: 27,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
