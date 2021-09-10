@@ -3,20 +3,14 @@ import 'package:gebeta_food/models/rating.dart';
 import 'package:gebeta_food/scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class ReviewCard extends StatefulWidget {
-  final int index;
-  ReviewCard(this.index);
+class ReviewCard extends StatelessWidget {
+  final int reviewIndex;
+  const ReviewCard(this.reviewIndex);
 
-  @override
-  _ReviewCardState createState() => _ReviewCardState();
-}
-
-class _ReviewCardState extends State<ReviewCard> {
-  @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
         builder: (context, Widget child, MainModel model) {
-      Rating reviewModel = model.fetchReviews[widget.index];
+      Rating reviewModel = model.fetchReviews[reviewIndex];
       return Container(
         margin: EdgeInsets.only(top: 20, left: 15, right: 15),
         padding: EdgeInsets.only(top: 8, left: 10, right: 10),
@@ -43,6 +37,7 @@ class _ReviewCardState extends State<ReviewCard> {
               padding: const EdgeInsets.only(left: 40.0),
               child: Text(reviewModel.comment),
             ),
+            Text(reviewModel.id),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -51,7 +46,8 @@ class _ReviewCardState extends State<ReviewCard> {
                   style: TextStyle(fontSize: 18),
                 ),
                 TextButton(
-                    onPressed: () => _likeReview(model.likeAReview,reviewModel.id),
+                    onPressed: () =>
+                        _likeReview(model.likeAReview, reviewModel.id),
                     child: Row(
                       children: [
                         Icon(
@@ -70,6 +66,6 @@ class _ReviewCardState extends State<ReviewCard> {
 
   _likeReview(Function likeAReview, String id) {
     likeAReview(id);
-    print("bubu");
+    print("bubu " + id);
   }
 }

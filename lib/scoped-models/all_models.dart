@@ -413,7 +413,7 @@ mixin ReviewModel on AllModels {
       print(rateList);
       rateList.forEach((dynamic data) {
         Rating restaurant = Rating(
-            id: data['id'],
+            id: data['_id'],
             comment: data['comment'],
             rating: data['rating'].toDouble(),
             likes: data['likes']);
@@ -437,6 +437,7 @@ mixin ReviewModel on AllModels {
       "rating": rating,
       "comment": comment,
     };
+    print(json.encode(rateData));
 
     final http.Response response = await http.post(url,
         body: json.encode(rateData),
@@ -451,32 +452,35 @@ mixin ReviewModel on AllModels {
     return http.get(url).then((http.Response response) {
       final List<Rating> fetchedReviews = [];
 
-      final List<dynamic> orderList = json.decode(response.body);
-      print(orderList);
-      orderList.forEach((dynamic data) {
-        Rating order = Rating(
-            id: data['id'],
+      final List<dynamic> ratingList = json.decode(response.body);
+      // print(ratingList);
+      ratingList.forEach((dynamic data) {
+        Rating rating = Rating(
+            id: data['_id'],
             comment: data['comment'],
             rating: data['rating'],
             likes: data['likes']);
 
-        fetchedReviews.add(order);
+        // fetchedReviews.add(rating);
+        _ratings.add(rating);
       });
-      _ratings = fetchedReviews;
-      print("OLA id " + fetchedReviews[0].id);
+      // _ratings = fetchedReviews;
+      print("OLA id OLA OLA" + fetchedReviews[0].id);
       notifyListeners();
     });
   }
 
-  likeAReview(String id) {
-    Uri url = Uri.parse('http://192.168.1.9:3000/rate/' + id);
-    return http.put(url).then((http.Response response) => {
-          print(response)
-          // // Map<String, dynamic> responseData = json.decode(response.body);
-          // Rating updatedReview = Rating(id: id, comment: responseData['name'], rating: esponseData['name'], likes: esponseData['name'])
+  likeAReview(String id) async {
+    Uri url = Uri.parse('http://192.168.1.9:3000/rate/update/$id');
+    // print(json.encode({"id" : id}));
+    print("Id"+id);
+    final Map<String, dynamic> idData = {"uniqueId": "613944bc3935702bfe53f578"};
+    print(jsonEncode(idData));
+    http.Response response = await http.put(url);
+    Map<String, dynamic> responseData = json.decode(response.body);
 
-          // _ratings[index] = updatedReview;
-          // notifyListeners();
-        });
+    print(responseData);
+
+    notifyListeners();
   }
 }
