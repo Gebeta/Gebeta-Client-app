@@ -51,27 +51,11 @@ class _ReviewScreenState extends State<ReviewScreen> {
                 Container(
                   child: Text("Order Details"),
                 ),
-                // Container(
-                //   child: Table(
-                //     border: TableBorder.all(color: Colors.black),
-                //     children: [
-                //       TableRow(children: [
-                //         Text('Cell 1'),
-                //         Text('Cell 2'),
-                //         Text('Cell 3'),
-                //       ]),
-                //       TableRow(children: [
-                //         Text('Cell 1'),
-                //         Text('Cell 2'),
-                //         Text('Cell 3'),
-                //       ])
-                //     ],
-                //   ),
-                // ),
+                
                 DataTable(columns: [
-                  DataColumn(label: Text("ID")),
                   DataColumn(label: Text("Item")),
-                  DataColumn(label: Text("price"))
+                  DataColumn(label: Text("Quantity")),
+                  DataColumn(label: Text("Total"))
                 ], rows: [
                   DataRow(cells: [
                     DataCell(Text("1")),

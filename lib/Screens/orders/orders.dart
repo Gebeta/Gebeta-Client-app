@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:gebeta_food/Screens/orders/completed_order.dart';
 import 'package:gebeta_food/Screens/orders/pending_orderd.dart';
+import 'package:gebeta_food/scoped-models/main.dart';
 
 class AllOrdersScreen extends StatefulWidget {
-  const AllOrdersScreen({ Key? key }) : super(key: key);
+  final MainModel model;
+  
+  const AllOrdersScreen(this.model);
 
   @override
   _AllOrdersScreenState createState() => _AllOrdersScreenState();
 }
 
 class _AllOrdersScreenState extends State<AllOrdersScreen> {
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(length: 2,
@@ -31,8 +35,8 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
        ),
        body: TabBarView(
          children: [
-           PendingOrderScreen(),
-           CompletedOrderScreen()
+           PendingOrderScreen(widget.model),
+           CompletedOrderScreen(widget.model)
          ],
        ),
      )

@@ -346,20 +346,22 @@ mixin OrderModel on AllModels {
       final List<Order> fetchedOrders = [];
 
       final List<dynamic> orderList = json.decode(response.body);
-      print(orderList);
+      // print("yooo");
+      // print(orderList[0]['items'][0]['quantity']);
       orderList.forEach((dynamic data) {
         Order order = Order(
           id: data['id'],
-          restaurantId: data['restaurant_id'],
-          clientId: data['client_id'],
-          totalPrice: data['totalPrice'],
+          restaurantId: data['restaurant_id']['name'],
+          clientId: data['client_id']['name'],
+          totalPrice: data['totalPrice'].toDouble(),
+          shippingFee: data["deliveryfee"].toDouble(),
           isAcitive: data['isAcitive'],
           items: data['items'],
         );
         fetchedOrders.add(order);
       });
       _activeOrder = fetchedOrders;
-      print("OLA id " + fetchedOrders[0].id);
+      print("OLA id " + fetchedOrders[0].items[1].toString());
       notifyListeners();
     });
   }
@@ -376,14 +378,16 @@ mixin OrderModel on AllModels {
           id: data['id'],
           restaurantId: data['restaurant_id'],
           clientId: data['client_id'],
-          totalPrice: data['totalPrice'],
+          totalPrice: data['totalPrice'].toDouble(),
+          shippingFee: data["deliveryfee"].toDouble(),
           isAcitive: data['isAcitive'],
           items: data['items'],
+          
         );
         fetchedOrders.add(order);
       });
       _completedOrder = fetchedOrders;
-      print("OLA id " + fetchedOrders[0].id);
+      print("OLA id " + fetchedOrders.length.toString());
       notifyListeners();
     });
 
@@ -473,8 +477,10 @@ mixin ReviewModel on AllModels {
   likeAReview(String id) async {
     Uri url = Uri.parse('http://192.168.1.9:3000/rate/update/$id');
     // print(json.encode({"id" : id}));
-    print("Id"+id);
-    final Map<String, dynamic> idData = {"uniqueId": "613944bc3935702bfe53f578"};
+    print("Id" + id);
+    final Map<String, dynamic> idData = {
+      "uniqueId": "613944bc3935702bfe53f578"
+    };
     print(jsonEncode(idData));
     http.Response response = await http.put(url);
     Map<String, dynamic> responseData = json.decode(response.body);

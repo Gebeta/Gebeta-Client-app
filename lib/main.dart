@@ -73,7 +73,7 @@ class _MyAppState extends State<MyApp> {
           '/edit_profile': (context) => EditProfilePage(_model),
           '/selectTopics': (context) => SelectTopicsPage(),
           '/my_cart': (context) => MyCartPage(_model),
-          '/my_orders': (context) => AllOrdersScreen(),
+          '/my_orders': (context) => AllOrdersScreen(_model),
           '/phone_ver': (context) => LoginScreen()
         },
         onUnknownRoute: (RouteSettings settings) {
