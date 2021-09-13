@@ -303,7 +303,7 @@ class _MyCartPageState extends State<MyCartPage> {
                       height: 150.0,
                       width: 150.0,
                       image: NetworkImage(
-                          'http://192.168.1.9:3000/images/${model.getCartList[cartIndex].id}/${model.getCartList[cartIndex].image}'), //networkImage
+                          '$baseUrl/images/${model.getCartList[cartIndex].id}/${model.getCartList[cartIndex].image}'), //networkImage
                       fit: BoxFit.cover,
                     ),
                   ),

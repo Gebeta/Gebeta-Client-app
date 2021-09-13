@@ -44,7 +44,7 @@ class FoodCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30.0),
                 child: Image.network(
-                  'http://192.168.1.9:3000/images/${itemModel.id}/${itemModel.imageUrl[1]}',
+                  '$baseUrl/images/${itemModel.id}/${itemModel.imageUrl[1]}',
                   fit: BoxFit.cover,
                   height: 120,
                   width: 130,

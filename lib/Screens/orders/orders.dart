@@ -13,6 +13,12 @@ class AllOrdersScreen extends StatefulWidget {
 }
 
 class _AllOrdersScreenState extends State<AllOrdersScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    widget.model.getActiveOrders();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
+import 'package:gebeta_food/constants.dart';
 import 'package:gebeta_food/models/profile.dart';
 import 'package:gebeta_food/models/rating.dart';
 import 'package:intl/intl.dart';
@@ -46,7 +46,7 @@ mixin UserModel on AllModels {
   Future<Map<String, dynamic>> checkExsitingUser(phoneNo) async {
     bool exists;
     final Map<String, dynamic> userData = {"phone_no": phoneNo};
-    Uri url = Uri.parse("http://192.168.1.9:3000/auth/checkUser");
+    Uri url = Uri.parse("$baseUrl/auth/checkUser");
 
     final http.Response response = await http.post(url,
         body: json.encode(userData),
@@ -80,7 +80,7 @@ mixin UserModel on AllModels {
       "phone_no": phoneNo,
       "address": address
     };
-    Uri url = Uri.parse("http://192.168.1.9:3000/auth/clientsignup");
+    Uri url = Uri.parse("$baseUrl/auth/clientsignup");
     final http.Response response = await http.post(url,
         body: json.encode(userData),
         headers: {'Content-Type': 'application/json'});
@@ -115,7 +115,7 @@ mixin UserModel on AllModels {
       "password": password,
     };
 
-    Uri url = Uri.parse("http://192.168.1.9:3000/auth/clientlogin");
+    Uri url = Uri.parse("$baseUrl/auth/clientlogin");
     final http.Response response = await http.post(url,
         body: json.encode(authData),
         headers: {'Content-Type': 'application/json'});
@@ -159,7 +159,7 @@ mixin UserModel on AllModels {
 
   //  Future<Profile> getProfile(String id) async {
   //   Uri url =
-  //       Uri.parse("http://192.168.1.9:3000/client/$id");
+  //       Uri.parse("$baseUrl/client/$id");
   //   final http.Response response =
   //       await http.get(url, headers: {'Content-Type': 'application/json'});
   //   if (response.statusCode == 200) {
@@ -200,7 +200,7 @@ mixin RestaurantModel on AllModels {
   }
 
   Future<Null> getRestaurants() {
-    Uri url = Uri.parse("http://192.168.1.9:3000/restaurant");
+    Uri url = Uri.parse("$baseUrl/restaurant");
     return http.get(url).then((http.Response response) {
       final List<Restaurant> fetchedRestaurants = [];
 
@@ -230,7 +230,7 @@ mixin ItemModel on AllModels {
   }
 
   Future<Null> fetchItems() {
-    Uri url = Uri.parse("http://192.168.1.9:3000/items");
+    Uri url = Uri.parse("$baseUrl/items");
     return http.get(url).then((http.Response response) {
       final List<Item> fetchedItems = [];
 
@@ -242,6 +242,7 @@ mixin ItemModel on AllModels {
             name: data['foodName'],
             description: data['description'],
             imageUrl: data['imgLocation'],
+            restaurantName: data['restaurant_id']['name'],
             menuStatus: data['isServed'],
             price: data['price'].toDouble(),
             quantity: 1);
@@ -328,7 +329,7 @@ mixin OrderModel on AllModels {
       "items": items,
     };
 
-    Uri url = Uri.parse("http://192.168.1.9:3000/order");
+    Uri url = Uri.parse("$baseUrl/order");
 
     final http.Response response = await http.post(url,
         body: json.encode(orderData),
@@ -341,7 +342,7 @@ mixin OrderModel on AllModels {
   }
 
   getActiveOrders() async {
-    Uri url = Uri.parse("http://192.168.1.9:3000/order/activeorders");
+    Uri url = Uri.parse("$baseUrl/order/activeorders");
     return http.get(url).then((http.Response response) {
       final List<Order> fetchedOrders = [];
 
@@ -352,7 +353,10 @@ mixin OrderModel on AllModels {
         Order order = Order(
           id: data['id'],
           restaurantId: data['restaurant_id']['name'],
-          clientId: data['client_id']['name'],
+          clientId: data['client_id']['_id'],
+          clientName: data['client_id']['first_name'] +
+              " " +
+              data['client_id']['last_name'],
           totalPrice: data['totalPrice'].toDouble(),
           shippingFee: data["deliveryfee"].toDouble(),
           isAcitive: data['isAcitive'],
@@ -360,14 +364,16 @@ mixin OrderModel on AllModels {
         );
         fetchedOrders.add(order);
       });
-      _activeOrder = fetchedOrders;
+      _activeOrder = fetchedOrders.where((Order order) {
+        return order.clientId == _authenticatedUser.id;
+      }).toList();
       print("OLA id " + fetchedOrders[0].items[1].toString());
       notifyListeners();
     });
   }
 
   getCompletedOrders() async {
-    Uri url = Uri.parse("http://192.168.1.9:3000/order/completedorders");
+    Uri url = Uri.parse("$baseUrl/order/completedorders");
     return http.get(url).then((http.Response response) {
       final List<Order> fetchedOrders = [];
 
@@ -376,13 +382,15 @@ mixin OrderModel on AllModels {
       orderList.forEach((dynamic data) {
         Order order = Order(
           id: data['id'],
-          restaurantId: data['restaurant_id'],
-          clientId: data['client_id'],
+          restaurantId: data['restaurant_id']['name'],
+          clientId: data['client_id']['_id'],
+          clientName: data['client_id']['first_name'] +
+              " " +
+              data['client_id']['last_name'],
           totalPrice: data['totalPrice'].toDouble(),
           shippingFee: data["deliveryfee"].toDouble(),
           isAcitive: data['isAcitive'],
           items: data['items'],
-          
         );
         fetchedOrders.add(order);
       });
@@ -409,7 +417,7 @@ mixin ReviewModel on AllModels {
   }
 
   Future<Null> getReview() {
-    Uri url = Uri.parse("http://192.168.1.9:3000/rate");
+    Uri url = Uri.parse("$baseUrl/rate");
     return http.get(url).then((http.Response response) {
       final List<Rating> fetchedRates = [];
 
@@ -432,7 +440,7 @@ mixin ReviewModel on AllModels {
 
   Future<Null> createReview(String restaurantId, String clientId,
       String orderId, double rating, String comment) async {
-    Uri url = Uri.parse("http://192.168.1.9:3000/rate");
+    Uri url = Uri.parse("$baseUrl/rate");
 
     final Map<String, dynamic> rateData = {
       "restaurantd": restaurantId,
@@ -452,7 +460,7 @@ mixin ReviewModel on AllModels {
   }
 
   fetchAllReviews() {
-    Uri url = Uri.parse("http://192.168.1.9:3000/rate");
+    Uri url = Uri.parse("$baseUrl/rate");
     return http.get(url).then((http.Response response) {
       final List<Rating> fetchedReviews = [];
 
@@ -475,7 +483,7 @@ mixin ReviewModel on AllModels {
   }
 
   likeAReview(String id) async {
-    Uri url = Uri.parse('http://192.168.1.9:3000/rate/update/$id');
+    Uri url = Uri.parse('$baseUrl/rate/update/$id');
     // print(json.encode({"id" : id}));
     print("Id" + id);
     final Map<String, dynamic> idData = {

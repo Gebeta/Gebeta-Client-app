@@ -96,7 +96,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                               size: 18,
                             ),
                             Text(
-                              "Restaurant Name",
+                              widget.item.restaurantName,
                               style: TextStyle(
                                   fontSize: 12.0,
                                   fontFamily: "Montserrat",
@@ -272,7 +272,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
     List<NetworkImage> networkImages = [];
     for (var i = 0; i < item.imageUrl.length; i++) {
       networkImages.add(NetworkImage(
-          'http://192.168.1.9:3000/images/${item.id}/${item.imageUrl[i]}'));
+          '$baseUrl/images/${item.id}/${item.imageUrl[i]}'));
     }
     return networkImages;
   }

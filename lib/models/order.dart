@@ -4,6 +4,7 @@ class Order {
   final int id;
   final String restaurantId;
   final String clientId;
+  final String clientName;
   final double totalPrice;
   final double shippingFee;
   final bool isAcitive;
@@ -14,6 +15,7 @@ class Order {
     required this.id,
     required this.restaurantId,
     required this.clientId,
+    required this.clientName,
     required this.totalPrice,
     required this.shippingFee,
     required this.isAcitive,

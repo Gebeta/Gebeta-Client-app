@@ -3,6 +3,7 @@ class Item {
   final List<dynamic> imageUrl;
   final String description;
   final String name;
+  final String restaurantName;
   final double price;
   final bool menuStatus;
   int quantity =1;
@@ -12,8 +13,10 @@ class Item {
     required this.imageUrl,
     required this.description,
     required this.name,
+    required this.restaurantName,
     required this.price,
     required this.menuStatus,
     required this.quantity,
   });
 }
+

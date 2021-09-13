@@ -6,3 +6,6 @@ const ksecondaryColor = Color(0xFFB5BFD0);
 const gTextColor = Color(0xFF50505D);
 const gTextLightColor = Color(0xFF6A727D);
 const whiteColor = Colors.white;
+
+
+String baseUrl = "http://192.168.1.11:3000";
