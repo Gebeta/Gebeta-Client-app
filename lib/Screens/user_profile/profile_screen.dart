@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:gebeta_food/Screens/orders/orders.dart';
+import 'package:gebeta_food/Screens/user_profile/change_password.dart';
 import 'package:gebeta_food/constants.dart';
 import 'package:gebeta_food/models/profile.dart';
 import 'package:gebeta_food/scoped-models/main.dart';
 
 class ProfileScreen extends StatefulWidget {
   final MainModel model;
-  ProfileScreen(this.model);
+  Profile profile;
+  ProfileScreen(this.model, this.profile);
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late Profile response;
   @override
   void initState() {
-    response = widget.model.getUserProfile;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +92,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  response.firstName + " " + response.lastName,
+                                  widget.profile.firstName +
+                                      " " +
+                                      widget.profile.lastName,
                                   style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold),
@@ -99,14 +103,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   height: 10,
                                 ),
                                 Text(
-                                  response.email,
+                                  widget.profile.email,
                                   style: TextStyle(
                                       fontSize: 16,
                                       color: gTextLightColor,
                                       fontWeight: FontWeight.w300),
                                 ),
                                 Text(
-                                  response.phoneNo,
+                                  widget.profile.phoneNo,
                                   style: TextStyle(
                                       fontSize: 16,
                                       color: gTextLightColor,
@@ -180,7 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         context, Icons.people_outlined, "Invite Friends"),
                     profileMenu(
                         context, Icons.rate_review_outlined, "Rate app"),
-                    profileMenu(context, Icons.info_outline , "About Us"),
+                    profileMenu(context, Icons.info_outline, "About Us"),
                   ],
                 ),
               ),
@@ -213,7 +217,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, "/edit_profile");
+                if (name == "Change Password") {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ChangePassword()));
+                } else if (name == "Payment Methods") {
+                } else if (name == "Location") {
+                } else if (name == "My Orders") {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              AllOrdersScreen(widget.model)));
+                } else if (name == "Notification") {
+                } else if (name == "Language") {
+                } else if (name == "Invite Friends") {
+                } else if (name == "Rate app") {
+                } else {}
               },
               icon: Icon(
                 Icons.navigate_next,

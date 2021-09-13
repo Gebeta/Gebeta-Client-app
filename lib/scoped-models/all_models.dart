@@ -20,7 +20,9 @@ mixin AllModels on Model {
   List<Order> _order = [];
   List<Order> _completedOrder = [];
   List<Rating> _ratings = [];
+  late Profile profile;
   User _authenticatedUser = User(id: "", email: "", token: "");
+
   Profile userProfile = Profile(
       id: "",
       firstName: '',
@@ -39,12 +41,32 @@ mixin UserModel on AllModels {
     return _authenticatedUser;
   }
 
+  fetchUser() async {
+    if (_authenticatedUser.id != "") {
+      Uri url = Uri.parse("$baseUrl/client/${_authenticatedUser.id}");
+      return http.get(url).then((http.Response response) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        profile = Profile(
+            id: responseData['_id'],
+            firstName: responseData['first_name'],
+            lastName: responseData['last_name'],
+            email: responseData['email'],
+            phoneNo: responseData['phone_no'],
+            address: responseData['address'],
+            password: responseData['password']);
+        print("bubu");
+        print(profile.firstName);
+      });
+    } else {
+      print("You arenot logged in");
+    }
+  }
+
   Profile get getUserProfile {
-    return userProfile;
+    return profile;
   }
 
   Future<Map<String, dynamic>> checkExsitingUser(phoneNo) async {
-    bool exists;
     final Map<String, dynamic> userData = {"phone_no": phoneNo};
     Uri url = Uri.parse("$baseUrl/auth/checkUser");
 
@@ -87,26 +109,34 @@ mixin UserModel on AllModels {
 
     final Map<String, dynamic> responseData = json.decode(response.body);
     print(responseData);
+    bool hasError = true;
+    String message = 'Something went wrong';
+    if (responseData['error'] == true) {
+      hasError = true;
+      message = responseData['message'];
+    } else {
+      hasError = false;
+      message = "Signed Up successfully";
+      profile = Profile(
+        id: responseData['id'],
+        firstName: responseData['first_name'],
+        lastName: responseData['last_name'],
+        email: responseData['email'],
+        phoneNo: responseData['phone_no'],
+        address: responseData['address'],
+        password: responseData['password'],
+      );
+      _authenticatedUser = User(
+          id: responseData['_id'], email: email, token: responseData['token']);
 
-    userProfile = Profile(
-      id: responseData['id'],
-      firstName: responseData['first_name'],
-      lastName: responseData['last_name'],
-      email: responseData['email'],
-      phoneNo: responseData['phone_no'],
-      address: responseData['address'],
-      password: responseData['password'],
-    );
-    _authenticatedUser = User(
-        id: responseData['_id'], email: email, token: responseData['token']);
+      SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    preferences.setString("token", responseData['token']);
-    preferences.setString("userEmail", email);
-    preferences.setString("userId", responseData['_id']);
-
-    return {'success': true, 'message': "signed up"};
+      preferences.setString("token", responseData['token']);
+      preferences.setString("userEmail", email);
+      preferences.setString("userId", responseData['_id']);
+    }
+    notifyListeners();
+    return {'success': !hasError, 'message': message};
   }
 
   Future<Map<String, dynamic>> login(String password, String email) async {
@@ -122,25 +152,35 @@ mixin UserModel on AllModels {
 
     final Map<String, dynamic> responseData = json.decode(response.body);
     print(responseData);
-    userProfile = Profile(
-      id: responseData['id'],
-      firstName: responseData['first_name'],
-      lastName: responseData['last_name'],
-      email: responseData['email'],
-      phoneNo: responseData['phone_no'],
-      address: responseData['address'],
-      password: responseData['password'],
-    );
-    _authenticatedUser = User(
-        id: responseData['_id'], email: email, token: responseData['token']);
 
-    SharedPreferences preferences = await SharedPreferences.getInstance();
+    bool hasError = true;
+    String message = 'Something went wrong';
+    if (responseData['error'] == true) {
+      hasError = true;
+      message = responseData['message'];
+    } else {
+      hasError = false;
+      message = "Logged in successfully";
+      _authenticatedUser = User(
+          id: responseData['_id'], email: email, token: responseData['token']);
 
-    preferences.setString("token", responseData['token']);
-    preferences.setString("userEmail", email);
-    preferences.setString("userId", responseData['_id']);
+      profile = Profile(
+        id: responseData['id'],
+        firstName: responseData['first_name'],
+        lastName: responseData['last_name'],
+        email: responseData['email'],
+        phoneNo: responseData['phone_no'],
+        address: responseData['address'],
+        password: responseData['password'],
+      );
+      SharedPreferences preferences = await SharedPreferences.getInstance();
 
-    return {'success': true, 'message': "logged in"};
+      preferences.setString("token", responseData['token']);
+      preferences.setString("userEmail", email);
+      preferences.setString("userId", responseData['_id']);
+    }
+    notifyListeners();
+    return {'success': !hasError, 'message': message};
   }
 
   void autoAuthenthicate() async {

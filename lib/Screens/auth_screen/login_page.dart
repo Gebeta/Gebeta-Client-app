@@ -103,6 +103,11 @@ class _LoginPageState extends State<LoginPage> {
           hintStyle:
               TextStyle(color: gPrimaryColor, fontWeight: FontWeight.w100),
         ),
+        validator: (value) {
+          if (value.toString().isEmpty || value.toString().length < 8) {
+            return 'Invalid Password';
+          }
+        },
         onChanged: (String value) {
           _formData['password'] = value;
         },
@@ -137,11 +142,32 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _submitForm(Function login) async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    _formKey.currentState!.save();
     final Map<String, dynamic> response =
         await login(_formData['password'], _formData['email']);
     print("response data " + response['success'].toString());
     if (response['success']) {
       Navigator.pushNamed(context, "/home");
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("An error occured"),
+              content: Text(response['message']),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Okay"),
+                )
+              ],
+            );
+          });
     }
   }
 }

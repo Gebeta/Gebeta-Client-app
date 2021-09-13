@@ -130,7 +130,7 @@ class _SignUpPageState extends State<SignUpPage> {
             fontSize: 17, fontWeight: FontWeight.w600, color: gPrimaryColor),
         obscureText: hidePwd,
         validator: (value) {
-          if (value.toString().isEmpty || value.toString().length < 6) {
+          if (value.toString().isEmpty || value.toString().length < 8) {
             return 'Invalid Password';
           }
         },
@@ -249,11 +249,29 @@ class _SignUpPageState extends State<SignUpPage> {
     print("response data " + response['success'].toString());
     if (response['success']) {
       Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      new AddProfilePicScreen(_formData['first_name'],)),
+        context,
+        MaterialPageRoute(
+            builder: (context) => new AddProfilePicScreen(
+                  _formData['first_name'],
+                )),
+      );
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("An error occured"),
+              content: Text(response['message']),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Okay"),
+                )
+              ],
             );
+          });
     }
   }
 }

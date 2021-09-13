@@ -3,7 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gebeta_food/Screens/home_screen/list_view.dart';
 import 'package:gebeta_food/Screens/home_screen/pop_foods.dart';
 import 'package:gebeta_food/Screens/home_screen/rest.dart';
+import 'package:gebeta_food/Screens/user_profile/profile_screen.dart';
 import 'package:gebeta_food/constants.dart';
+import 'package:gebeta_food/models/profile.dart';
 import 'package:gebeta_food/scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -22,13 +24,15 @@ class _MyHomePageState extends State<MyHomePage>
   late TabController tabController;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     // Map<String, dynamic> response = await widget.model.getProfile(widget.model.getUser.id);
+    widget.model.fetchUser();
     tabController = TabController(vsync: this, length: 6);
   }
 
   Widget _buildSideDrawer(BuildContext context) {
+    Profile profile = widget.model.getUserProfile;
     return Drawer(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -36,8 +40,8 @@ class _MyHomePageState extends State<MyHomePage>
           Column(
             children: <Widget>[
               UserAccountsDrawerHeader(
-                accountName: Text("Client Name"),
-                accountEmail: Text("Client Email"),
+                accountName: Text(profile.firstName + " " + profile.lastName),
+                accountEmail: Text(profile.email),
                 currentAccountPicture: CircleAvatar(
                     backgroundColor:
                         Theme.of(context).platform == TargetPlatform.iOS
@@ -58,7 +62,11 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("Profile"),
                     onTap: () {
-                      Navigator.pushNamed(context, '/profile');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ProfileScreen(widget.model, profile)));
                     },
                   ),
                   ListTile(
@@ -78,7 +86,11 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("Settings"),
                     onTap: () {
-                      Navigator.pushNamed(context, '/profile');
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ProfileScreen(widget.model, profile)));
                     },
                   ),
                   ListTile(
@@ -122,7 +134,6 @@ class _MyHomePageState extends State<MyHomePage>
                       onTap: () {
                         model.logout();
                         Navigator.pushReplacementNamed(context, '/');
-                        
                       },
                     );
                   })
