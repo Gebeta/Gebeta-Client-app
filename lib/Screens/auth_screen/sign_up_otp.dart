@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gebeta_food/Screens/auth_screen/login_page.dart';
 import 'package:gebeta_food/Screens/auth_screen/signup_page.dart';
 import 'package:gebeta_food/Screens/widgets/others/logo.dart';
 import 'package:gebeta_food/scoped-models/main.dart';
@@ -141,7 +142,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             );
-          })
+          }),
+          TextButton(
+                  onPressed: () {
+                   Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginPage()));
+                  },
+                  child: Text(
+                    "Already have an account? Login here.",
+                  ),
+                )
         ],
       ),
     );

@@ -8,4 +8,8 @@ const gTextLightColor = Color(0xFF6A727D);
 const whiteColor = Colors.white;
 
 
-String baseUrl = "http://192.168.1.11:3000";
+// String baseUrl = "http://192.168.1.11:3000";
+
+// String baseUrl = "http://10.5.226.85:3000";
+
+String baseUrl = 'http://10.5.224.241:3000';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gebeta_food/Screens/orders/order_card.dart';
 import 'package:gebeta_food/models/order.dart';
 import 'package:gebeta_food/scoped-models/main.dart';
 
@@ -11,16 +12,16 @@ class CompletedOrderScreen extends StatefulWidget {
 }
 
 class _CompletedOrderScreenState extends State<CompletedOrderScreen> {
-
-    @override
+  @override
   void initState() {
     widget.model.getCompletedOrders();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
-    );
+    return ListView.builder(
+        itemBuilder: (BuildContext context, int index) => OrderCard(index),
+        itemCount: widget.model.getCompletedOrderList.length);
   }
 }

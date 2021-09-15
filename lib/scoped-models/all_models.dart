@@ -282,7 +282,7 @@ mixin ItemModel on AllModels {
             name: data['foodName'],
             description: data['description'],
             imageUrl: data['imgLocation'],
-            restaurantName: data['restaurant_id']['name'],
+            restaurantName: data['restaurandId']['name'],
             menuStatus: data['isServed'],
             price: data['price'].toDouble(),
             quantity: 1);

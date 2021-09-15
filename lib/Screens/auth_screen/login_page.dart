@@ -7,6 +7,8 @@ import 'package:gebeta_food/constants.dart';
 import 'package:gebeta_food/scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+import 'sign_up_otp.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -72,9 +74,18 @@ class _LoginPageState extends State<LoginPage> {
                 }),
                 Container(
                   padding: EdgeInsets.only(top: 15.0),
-                  alignment: Alignment.center,
+                  alignment: Alignment.centerRight,
                   child: TextButton(
                       onPressed: () {}, child: Text('Forgot Password?')),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()));
+                  },
+                  child: Text(
+                    "Don't have an account? Register",
+                  ),
                 ),
               ],
             ),
