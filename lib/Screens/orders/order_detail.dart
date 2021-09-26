@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gebeta_food/constants.dart';
 import 'package:gebeta_food/models/order.dart';
 import 'package:gebeta_food/scoped-models/main.dart';
 
@@ -17,12 +18,14 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   getLocation() async {
     name = await widget.model.getUserLocation(widget.model.getUser.id);
   }
+
   @override
   void initState() {
     // TODO: implement initState
     getLocation();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,10 +103,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
             ),
             Container(
               child: Column(
-                children: [
-                  Text("Delivered to:- "),
-                  Text("")
-                ],
+                children: [Text("Delivered to:- "), Text("")],
               ),
             ),
             Divider(),
@@ -114,10 +114,64 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                   Text("// retrive payment option")
                 ],
               ),
-            )
+            ),
+            createButton(widget.order.status)
           ],
         ),
       ),
     );
+  }
+
+  Widget createButton(status) {
+    Widget button;
+
+    if (status == 'pending') {
+      button = ElevatedButton(
+        child: Text("Cancel"),
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          primary: gPrimaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+      );
+    } else if (status == "accepted") {
+      button = ElevatedButton(
+        child: Text("Make Payment"),
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          primary: gPrimaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+      );
+    } else if (status == "paid") {
+      button = Text("");
+    } else if (status == "assigned") {
+      button = ElevatedButton(
+        child: Text("Track Order"),
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          primary: gPrimaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+      );
+    } else {
+      button = ElevatedButton(
+        child: Text("Complete"),
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          primary: gPrimaryColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+      );
+    }
+    return button;
   }
 }

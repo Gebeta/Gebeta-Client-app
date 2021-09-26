@@ -69,7 +69,7 @@ class _MyAppState extends State<MyApp> {
           '/login': (context) => LoginPage(),
           '/home': (context) => MyHomePage(model: _model),
           // '/profile': (context) => ProfileScreen(_model),
-          '/restaurants': (context) => AllRestaurantsPage(),
+          '/restaurants': (context) => AllRestaurantsPage(_model),
           '/edit_profile': (context) => EditProfilePage(_model),
           '/my_cart': (context) => MyCartPage(_model),
           '/my_orders': (context) => AllOrdersScreen(_model),

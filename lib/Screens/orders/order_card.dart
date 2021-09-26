@@ -25,7 +25,8 @@ class _OrderCardState extends State<OrderCard> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => new OrderDetailsPage(orderModel,model)));
+                  builder: (context) =>
+                      new OrderDetailsPage(orderModel, model)));
         },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -51,7 +52,6 @@ class _OrderCardState extends State<OrderCard> {
                     padding: const EdgeInsets.only(left: 8.0),
                     child: getOrderId(orderModel.id),
                   ),
-                  
                 ],
               ),
               Row(
@@ -71,7 +71,7 @@ class _OrderCardState extends State<OrderCard> {
                     padding: const EdgeInsets.only(left: 10.0),
                     child: Text("Status"),
                   ),
-                  Text(orderModel.isAcitive ? "Pending" : "Completed"),
+                  Text(orderModel.status),
                 ],
               ),
               Row(
@@ -84,7 +84,8 @@ class _OrderCardState extends State<OrderCard> {
                   Text((orderModel.totalPrice + orderModel.shippingFee)
                       .toString()),
                 ],
-              )
+              ),
+              
             ],
           ),
         ),
@@ -92,16 +93,17 @@ class _OrderCardState extends State<OrderCard> {
     });
   }
 
+  
+
   Widget getOrderId(int id) {
     Widget orderId;
     if (id < 10) {
-      orderId = Text("000"+id.toString());
+      orderId = Text("000" + id.toString());
     } else if (id < 100) {
       orderId = Text("00" + id.toString());
     } else if (id < 1000) {
       orderId = Text("0" + id.toString());
-    }
-    else{
+    } else {
       orderId = Text("" + id.toString());
     }
     return orderId;

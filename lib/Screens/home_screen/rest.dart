@@ -29,7 +29,7 @@ class _RestaurantsState extends State<Restaurants> {
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         itemBuilder: (BuildContext context, int index) => RestaurantCard(index),
-        itemCount: restaurants.length,
+        itemCount: 2,
       );
     } else {
       restaurantCards = Container();

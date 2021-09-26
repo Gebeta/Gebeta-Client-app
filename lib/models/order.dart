@@ -8,8 +8,9 @@ class Order {
   final double totalPrice;
   final double shippingFee;
   final bool isAcitive;
+  final String status;
   final List<dynamic> items;
-  // final String date;
+  
 
   Order({
     required this.id,
@@ -18,8 +19,8 @@ class Order {
     required this.clientName,
     required this.totalPrice,
     required this.shippingFee,
+    required this.status,
     required this.isAcitive,
-    // required this.date,
     required this.items,
   });
 }

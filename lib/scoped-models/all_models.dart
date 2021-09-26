@@ -180,6 +180,7 @@ mixin UserModel on AllModels {
     } else {
       hasError = false;
       message = "Signed Up successfully";
+      var address = jsonDecode(responseData['address']);
       profile = Profile(
         id: responseData['_id'],
         firstName: responseData['first_name'],
@@ -187,8 +188,8 @@ mixin UserModel on AllModels {
         email: responseData['email'],
         phoneNo: responseData['phone_no'],
         addressName: responseData['address'],
-        locationLatitude: 0.0,
-        locationLongtiude: 0.0,
+        locationLatitude: address['latitude'],
+        locationLongtiude: address['longtiude'],
         password: responseData['password'],
       );
       _authenticatedUser = User(
@@ -549,14 +550,17 @@ mixin OrderModel on AllModels {
           totalPrice: data['totalPrice'].toDouble(),
           shippingFee: data["deliveryfee"].toDouble(),
           isAcitive: data['isAcitive'],
+          status:data['status'],
           items: data['items'],
         );
+
         fetchedOrders.add(order);
       });
       _activeOrder = fetchedOrders.where((Order order) {
         return order.clientId == _authenticatedUser.id;
       }).toList();
-      // print("OLA id " + fetchedOrders[0].items[1].toString());
+      // print("OLA id ");
+      // print(fetchedOrders[0].date);
       notifyListeners();
     });
   }
@@ -579,6 +583,7 @@ mixin OrderModel on AllModels {
           totalPrice: data['totalPrice'].toDouble(),
           shippingFee: data["deliveryfee"].toDouble(),
           isAcitive: data['isAcitive'],
+          status:data['status'],
           items: data['items'],
         );
         fetchedOrders.add(order);
@@ -701,7 +706,7 @@ mixin OrderModel on AllModels {
 
   double calculateFare(DirectionDetails directionDetails) {
     // double timeFare = (directionDetails.durationValue /60)*0.2;
-    double distanceFare = (directionDetails.distanceValue / 1000) * 10;
+    double distanceFare = (directionDetails.distanceValue / 1000) * 8;
 
     double totalAmountInBirr = 30 + (distanceFare);
 

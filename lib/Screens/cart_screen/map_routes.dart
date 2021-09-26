@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ class MapRoutesScreen extends StatefulWidget {
   final String restaurantId;
   final MainModel model;
   final double totalAmount;
-  MapRoutesScreen(this.restaurantId, this.model,this.totalAmount);
+  MapRoutesScreen(this.restaurantId, this.model, this.totalAmount);
 
   @override
   _MapRoutesScreenState createState() => _MapRoutesScreenState();
@@ -24,7 +25,12 @@ class MapRoutesScreen extends StatefulWidget {
 class _MapRoutesScreenState extends State<MapRoutesScreen> {
   Completer<GoogleMapController> _controllerGoogleMap = Completer();
   late GoogleMapController newGoogleMapController;
-  DirectionDetails directionDetails = DirectionDetails(distanceValue: 0, durationValue: 0, distanceText: "", durationText: "", encodedPoints: "");
+  DirectionDetails directionDetails = DirectionDetails(
+      distanceValue: 0,
+      durationValue: 0,
+      distanceText: "",
+      durationText: "",
+      encodedPoints: "");
 
   List<LatLng> plineCoordinates = [];
   Set<Polyline> polyLineSet = {};
@@ -59,8 +65,6 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
   @override
   void initState() {
     userProfile = widget.model.getUserProfile;
-    double latitude = userProfile.locationLatitude;
-    double longtidue = userProfile.locationLongtiude;
     getPlaceDirection(widget.model);
     super.initState();
   }
@@ -105,7 +109,7 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
             left: 0.0,
             right: 0.0,
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               height: 150,
               decoration: BoxDecoration(
                   color: whiteColor,
@@ -125,32 +129,41 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
                   Row(
                     children: [
                       Text(
-                        (directionDetails!=null)? '${directionDetails.durationText}' :"",
+                        (directionDetails != null)
+                            ? '${directionDetails.durationText}'
+                            : "",
                         style: TextStyle(
-                          fontSize: 21,
-                          fontWeight: FontWeight.w500,
-                          color: gPrimaryColor
-                        ),
+                            fontSize: 21,
+                            fontWeight: FontWeight.w500,
+                            color: gPrimaryColor),
                       ),
                       Text(
-                        (directionDetails!=null)? " (${directionDetails.distanceText})": "",
+                        (directionDetails != null)
+                            ? " (${directionDetails.distanceText})"
+                            : "",
                         style: TextStyle(
-                          fontSize:17,
-                          fontWeight: FontWeight.w400
-                        ),
+                            fontSize: 17, fontWeight: FontWeight.w400),
                       )
                     ],
                   ),
                   Text(
-                    ((directionDetails!=null)? '${widget.model.calculateFare(directionDetails).toStringAsFixed(2)} ETB': ""),
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600
-                    ),
+                    ((directionDetails != null)
+                        ? '${widget.model.calculateFare(directionDetails).toStringAsFixed(2)} ETB'
+                        : ""),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
-                  TextButton(onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => FinalCart(widget.model.calculateFare(directionDetails),widget.model, widget.totalAmount)));
-                  }, child: Text("Go to Next Step"))
+                  TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => FinalCart(
+                                    widget.model
+                                        .calculateFare(directionDetails),
+                                    widget.model,
+                                    widget.totalAmount)));
+                      },
+                      child: Text("Go to Next Step"))
                 ],
               ),
             ),
@@ -164,7 +177,8 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
     print("Print");
     print(await model.getRestaurantLocation(widget.restaurantId));
     var details = await model.obtainPlacesDirectionDetails(
-        await model.getRestaurantLocation(widget.restaurantId), await model.getUserLocation(model.getUser.id));
+        await model.getRestaurantLocation(widget.restaurantId),
+        await model.getUserLocation(model.getUser.id));
 
     directionDetails = details;
     print("object");
@@ -196,22 +210,47 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
         polyLineSet.add(polyline);
       });
     }
+    LatLngBounds latLngBounds;
 
-    var pickUpLatLng = LatLng(9.034806, 38.759693);
-    var dropOffLatLng = LatLng(9.040294, 38.761715);
+    var pickUpLatLng = jsonDecode(
+        await widget.model.getRestaurantLocation(widget.restaurantId));
+    var dropOffLatLng =
+        jsonDecode(await widget.model.getUserLocation(widget.model.getUser.id));
+    print("dropOffLatLng");
+    print(dropOffLatLng['latitude']);
+    print(pickUpLatLng['latitude']);
+    var dropoff = LatLng(dropOffLatLng['latitude'], dropOffLatLng['longtiude']);
+    var pickup = LatLng(pickUpLatLng['latitude'], pickUpLatLng['longtiude']);
+    if (pickup.latitude > dropoff.latitude &&
+        pickup.longitude > dropoff.longitude) {
+      latLngBounds = LatLngBounds(southwest: dropoff, northeast: pickup);
+    } else if (pickup.longitude > dropoff.longitude) {
+      latLngBounds = LatLngBounds(
+          southwest: LatLng(pickup.latitude, dropoff.longitude),
+          northeast: LatLng(dropoff.latitude, pickup.longitude));
+    } else if (pickup.latitude > dropoff.latitude) {
+      latLngBounds = LatLngBounds(
+          southwest: LatLng(dropoff.latitude, pickup.longitude),
+          northeast: LatLng(pickup.latitude, dropoff.longitude));
+    } else {
+      latLngBounds = LatLngBounds(southwest: pickup, northeast: dropoff);
+    }
+    newGoogleMapController
+        .animateCamera(CameraUpdate.newLatLngBounds(latLngBounds, 80));
+
     Marker pickUpMarker = Marker(
       markerId: MarkerId("pickUpId"),
       infoWindow:
           InfoWindow(title: "Restaurant Location", snippet: "pick up Location"),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-      position: pickUpLatLng,
+      position: pickup,
     );
     Marker dropOffMarker = Marker(
       markerId: MarkerId("dropoffId"),
       infoWindow:
           InfoWindow(title: "User Location", snippet: "drop off Location"),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-      position: dropOffLatLng,
+      position: dropoff,
     );
 
     setState(() {
@@ -222,14 +261,14 @@ class _MapRoutesScreenState extends State<MapRoutesScreen> {
     Circle pickUpCircle = Circle(
         fillColor: Colors.blue,
         circleId: CircleId("pickup"),
-        center: pickUpLatLng,
+        center: pickup,
         radius: 12,
         strokeWidth: 4,
         strokeColor: Colors.blueAccent);
     Circle dropOffCircle = Circle(
         fillColor: Colors.deepPurple,
         circleId: CircleId("dropOff"),
-        center: dropOffLatLng,
+        center: dropoff,
         radius: 12,
         strokeWidth: 4,
         strokeColor: Colors.deepPurple);

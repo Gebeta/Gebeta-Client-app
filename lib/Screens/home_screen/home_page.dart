@@ -194,12 +194,16 @@ class _MyHomePageState extends State<MyHomePage>
           style: TextStyle(fontWeight: FontWeight.w400, fontSize: 25),
         ),
         actions: [
-          IconButton(
+          Row(children: [
+            IconButton(
               onPressed: () {
                 Navigator.pushNamed(context, '/my_cart');
                 print("clicked");
               },
               icon: Icon(Icons.shopping_cart_outlined)),
+              widget.model.getCartList.length >= 1 ?Text("(${ widget.model.getCartList.length})"): Text("")
+          ],),
+          
           SizedBox(
             width: 10,
           ),

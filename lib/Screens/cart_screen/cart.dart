@@ -61,90 +61,62 @@ class _MyCartPageState extends State<MyCartPage> {
           Column(
             children: [
               _builtDeliveryWidget(),
-              _buildCartList(widget.model.getCartList),
-              widget.model.getCartList.length == 0 ? Container():Container(
-                decoration: BoxDecoration(
-                    color: whiteColor,
-                    borderRadius: BorderRadius.circular(10.0)),
-                margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    // Text("sub total")
-
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              widget.model.getCartList.length > 0
+                  ? ListView.builder(
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) =>
+                          buildCartCard(index),
+                      itemCount: widget.model.getCartList.length,
+                    )
+                  : _buildCartList(widget.model.getCartList),
+              widget.model.getCartList.length == 0
+                  ? Container()
+                  : Container(
+                      decoration: BoxDecoration(
+                          color: whiteColor,
+                          borderRadius: BorderRadius.circular(10.0)),
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      padding: EdgeInsets.all(20),
+                      child: Column(
                         children: [
-                          Text(
-                            "Sub Total",
-                            style:
-                                TextStyle(fontSize: 19, color: gTextLightColor),
+                          // Text("sub total")
+
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Sub Total",
+                                  style: TextStyle(
+                                      fontSize: 19, color: gTextLightColor),
+                                ),
+                                Text(
+                                  totalAmount.toString(),
+                                  style: TextStyle(
+                                      fontSize: 16, color: gTextLightColor),
+                                )
+                              ],
+                            ),
                           ),
-                          Text(
-                            totalAmount.toString(),
-                            style:
-                                TextStyle(fontSize: 16, color: gTextLightColor),
-                          )
+
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              new MapRoutesScreen(restaurantId,
+                                                  widget.model, totalAmount)));
+                                },
+                                child: Text("See Route")),
+                          ),
                         ],
                       ),
                     ),
-                  
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => new MapRoutesScreen(
-                                        restaurantId, widget.model,totalAmount)));
-                          },
-                          child: Text("See Route")),
-                    ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(top: 8.0),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //     children: [
-                    //       Text(
-                    //         "Shipping",
-                    //         style:
-                    //             TextStyle(fontSize: 19, color: gTextLightColor),
-                    //       ),
-                    //       Text(
-                    //         shippingPrice.toString(),
-                    //         style:
-                    //             TextStyle(fontSize: 16, color: gTextLightColor),
-                    //       )
-                    //     ],
-                    //   ),
-                    // ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(top: 8.0),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //     children: [
-                    //       Text(
-                    //         "Total",
-                    //         style:
-                    //             TextStyle(fontSize: 19, color: gTextLightColor),
-                    //       ),
-                    //       Text(
-                    //         totalAmount.toString(),
-                    //         style:
-                    //             TextStyle(fontSize: 16, color: gTextLightColor),
-                    //       )
-                    //     ],
-                    //   ),
-                    // )
-                    // _buildRow("Sub Total", totalAmount),
-                    // _buildRow("Shipping", shippingPrice),
-                    // _buildRow("Total", totalAmount + shippingPrice),
-                  ],
-                ),
-              ),
             ],
           ),
           SizedBox(
@@ -152,61 +124,8 @@ class _MyCartPageState extends State<MyCartPage> {
           )
         ],
       ),
-      // bottomSheet: Container(
-      //     height: 60.0,
-      //     width: MediaQuery.of(context).size.width,
-      //     decoration: BoxDecoration(color: gsecondaryColor, boxShadow: [
-      //       BoxShadow(
-      //           color: Colors.black26, offset: Offset(0, -1), blurRadius: 6.0)
-      //     ]),
-      //     child: ScopedModelDescendant(
-      //         builder: (context, Widget child, MainModel model) {
-      //       return TextButton(
-      //         onPressed: () {
-      //           setState(() {
-      //             restaurantId = widget.model.getCartList[0].restaurantId;
-      //           });
-      //           model.createOrder(
-      //               restaurantId,
-      //               model.getUser.id,
-      //               totalAmount + shippingPrice,
-      //               widget.model.getCartList);
-      //           Navigator.push(
-      //               context,
-      //               MaterialPageRoute(
-      //                   builder: (context) => new PaymentOptions()));
-      //         },
-      //         child: Text(
-      //           "Checkout",
-      //           style: TextStyle(
-      //               color: whiteColor,
-      //               fontSize: 22.0,
-      //               fontWeight: FontWeight.bold,
-      //               letterSpacing: 2.0),
-      //         ),
-      //       );
-      //     })),
     );
   }
-
-  // Widget _buildRow(String label, double price) {
-  //   return Padding(
-  //     padding: const EdgeInsets.only(top: 8.0),
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //       children: [
-  //         Text(
-  //           label,
-  //           style: TextStyle(fontSize: 19, color: gTextLightColor),
-  //         ),
-  //         Text(
-  //           price.toString(),
-  //           style: TextStyle(fontSize: 16, color: gTextLightColor),
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget _buildCartList(List<Cart> cartItems) {
     if (cartItems.length == 0) {
@@ -229,9 +148,6 @@ class _MyCartPageState extends State<MyCartPage> {
       itemBuilder: (BuildContext context, int index) => buildCartCard(index),
       itemCount: cartItems.length,
     );
-    // return Column(
-    //   children: [CartCard(), CartCard(), CartCard(), CartCard(),],
-    // );
   }
 
   Widget _builtDeliveryWidget() {
@@ -279,117 +195,133 @@ class _MyCartPageState extends State<MyCartPage> {
   Widget buildCartCard(cartIndex) {
     return ScopedModelDescendant(
       builder: (context, Widget child, MainModel model) {
-        Cart cartItem = model.getCartList[cartIndex];
-        return Container(
-          margin: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-          height: 120.0,
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(12.0)),
-          child: Stack(
-            children: [
-              ScopedModelDescendant(
-                  builder: (context, Widget child, MainModel model) {
-                return Positioned(
-                  top: 0,
-                  right: 0,
-                  child: Container(
-                      child: IconButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              setState(() {
+        if (model.getCartList.length > 0) {
+          Cart cartItem = model.getCartList[cartIndex];
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+            height: 120.0,
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(12.0)),
+            child: Stack(
+              children: [
+                ScopedModelDescendant(
+                    builder: (context, Widget child, MainModel model) {
+                  return Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                        child: IconButton(
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  model.removeFromCart(
+                                                      cartIndex);
+                                                });
+                                                Navigator.pop(context);
                                                 model.removeFromCart(cartIndex);
-                                              });
-                                              model.removeFromCart(cartIndex);
-                                              Navigator.pop(context);
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("Yes")),
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("No"))
-                                      ],
-                                      title: Text(
-                                        "Are you sure",
-                                      ));
-                                });
-                          },
-                          icon: Icon(
-                            Icons.close,
-                            size: 18,
-                            color: gPrimaryColor,
-                          ))),
-                );
-              }),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(12),
-                        bottomLeft: Radius.circular(12)),
-                    child: Image(
-                      height: 150.0,
-                      width: 150.0,
-                      image: NetworkImage(
-                          '$baseUrl/images/${model.getCartList[cartIndex].id}/${model.getCartList[cartIndex].image}'), //networkImage
-                      fit: BoxFit.cover,
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("Yes")),
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("No"))
+                                        ],
+                                        title: Text(
+                                          "Are you sure",
+                                        ));
+                                  });
+                            },
+                            icon: Icon(
+                              Icons.close,
+                              size: 18,
+                              color: gPrimaryColor,
+                            ))),
+                  );
+                }),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          bottomLeft: Radius.circular(12)),
+                      child: Image(
+                        height: 150.0,
+                        width: 150.0,
+                        image: NetworkImage(
+                            '$baseUrl/images/${model.getCartList[cartIndex].id}/${model.getCartList[cartIndex].image}'), //networkImage
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(cartItem.name),
-                      Text(cartItem.price.toString())
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            if (cartItem.quantity > 1) {
-                              cartItem.quantity--;
-                            }
-                          });
-                          // Navigator.pushNamed(context, "/my_cart");
-                        },
-                        icon: Icon(Icons.remove_circle),
-                        color: gsecondaryColor,
-                        iconSize: 27,
-                      ),
-                      Text(cartItem.quantity.toString(),
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontFamily: "Montserrat",
-                          )),
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            cartItem.quantity++;
-                          });
-                        },
-                        icon: Icon(Icons.add_circle),
-                        color: gsecondaryColor,
-                        iconSize: 27,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(cartItem.name),
+                        Text(cartItem.price.toString())
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (cartItem.quantity > 1) {
+                                cartItem.quantity--;
+                              }
+                            });
+                            // Navigator.pushNamed(context, "/my_cart");
+                          },
+                          icon: Icon(Icons.remove_circle),
+                          color: gsecondaryColor,
+                          iconSize: 27,
+                        ),
+                        Text(cartItem.quantity.toString(),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: "Montserrat",
+                            )),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              cartItem.quantity++;
+                            });
+                          },
+                          icon: Icon(Icons.add_circle),
+                          color: gsecondaryColor,
+                          iconSize: 27,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        } else {
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+            child: Row(
+              children: [
+                Text("Nothing in your cart"),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/home");
+                    },
+                    child: Text("please add items"))
+              ],
+            ),
+          );
+        }
       },
     );
   }

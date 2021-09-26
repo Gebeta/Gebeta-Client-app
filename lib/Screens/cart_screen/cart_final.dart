@@ -80,6 +80,8 @@ class _FinalCartState extends State<FinalCart> {
               //     MaterialPageRoute(builder: (context) => PaymentOptions(_carts,widget.deliveryFee)));
               final Map<String, dynamic> response = await model.createOrder(_carts[0].restaurantId, widget.totalAmount,
                   double.parse(widget.deliveryFee.toStringAsFixed(2)), _carts);
+                  print("DateTime.now()");
+                  // print(Timestamp.ftomDate(DateTime.now()));
                   if (response['success']) {
                     Navigator.pushReplacementNamed(context, "/home");
                     Fluttertoast.showToast(msg: response['message'] + "Wait a little until the restaurant accept your order");
