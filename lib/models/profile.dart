@@ -4,7 +4,9 @@ class Profile {
   String lastName;
   String email;
   String phoneNo;
-  String address;
+  String addressName;
+  double locationLatitude;
+  double locationLongtiude;
   String password;
 
   Profile({
@@ -13,18 +15,9 @@ class Profile {
     required this.lastName,
     required this.email,
     required this.phoneNo,
-    required this.address,
+    required this.addressName,
+    required this.locationLatitude,
+    required this.locationLongtiude,
     required this.password,
   });
-  factory Profile.fromJson(Map<String, dynamic> json) {
-    return Profile(
-      id: json["_id"],
-      firstName: json["first_name"],
-      lastName: json["last_name"],
-      email: json["email"],
-      phoneNo: json["phone_no"],
-      address: json["address"],
-      password: json["password"],
-    );
-  }
 }

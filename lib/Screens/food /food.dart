@@ -213,6 +213,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                           builder: (context, Widget child, MainModel model) {
                         return ElevatedButton(
                           onPressed: () {
+                            
                             if (model.checkingItem(widget.item.id) == true) {
                               showDialog(
                                   context: context,
@@ -226,7 +227,21 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                                       ],
                                     );
                                   });
-                            } else {
+                            } else if(!model.checkRestaurant(widget.item.restaurantId)){
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text("you must choose food from same restaurnat!"),
+                                      actions: [
+                                        TextButton(onPressed: (){
+                                          Navigator.pop(context);
+                                        }, child: Text("okay"))
+                                      ],
+                                    );
+                                  });
+                            }
+                            else {
                               model.addToCart(
                                 widget.item.id,
                                 widget.item.name,
@@ -234,6 +249,7 @@ class _FoodDetailPageState extends State<FoodDetailPage> {
                                 widget.item.price.toDouble(),
                                 count,
                                 widget.item.description,
+                                widget.item.restaurantId
                               );
                               Navigator.push(
                                   context,

@@ -18,14 +18,7 @@ Widget _listItem(BuildContext context, String imgPath, String restaurantName,
     child: GestureDetector(
       onTap: () {
         print("Restaurant clicked");
-        Restaurant restaurant = Restaurant(
-            id: "612569c05920bc395d2a7f53",
-            name: restaurantName,
-            address: "",
-            phoneNo: "",
-            email: "email",
-            rating: rating,
-            isApproved: isOpen);
+        
         // Navigator.push(
         //   context,
         //   MaterialPageRoute(

@@ -17,6 +17,7 @@ class _AllOrdersScreenState extends State<AllOrdersScreen> {
   void initState() {
     // TODO: implement initState
     widget.model.getActiveOrders();
+    widget.model.getCompletedOrderList;
     super.initState();
   }
 

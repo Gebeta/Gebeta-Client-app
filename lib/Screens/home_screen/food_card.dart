@@ -11,7 +11,7 @@ class FoodCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<MainModel>(
+    return ScopedModelDescendant(
       builder: (context, Widget child, MainModel model) {
         Item itemModel = model.displayItems[itemIndex];
         return InkWell(
@@ -44,7 +44,7 @@ class FoodCard extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30.0),
                 child: Image.network(
-                  '$baseUrl/images/${itemModel.id}/${itemModel.imageUrl[1]}',
+                  '$baseUrl/images/${itemModel.id}/${itemModel.imageUrl[0]}',
                   fit: BoxFit.cover,
                   height: 120,
                   width: 130,

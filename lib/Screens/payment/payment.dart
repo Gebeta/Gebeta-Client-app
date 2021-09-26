@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gebeta_food/Screens/widgets/form_input/button.dart';
 import 'package:gebeta_food/constants.dart';
+import 'package:gebeta_food/models/cart.dart';
 
 class PaymentOptions extends StatefulWidget {
-  PaymentOptions({Key? key}) : super(key: key);
+  final List<Cart> carts;
+  final double deliveryFee;
+  PaymentOptions(this.carts,this.deliveryFee);
 
   @override
   _PaymentOptionsState createState() => _PaymentOptionsState();

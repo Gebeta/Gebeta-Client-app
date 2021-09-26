@@ -25,7 +25,7 @@ class _OrderCardState extends State<OrderCard> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => new OrderDetailsPage(orderModel)));
+                  builder: (context) => new OrderDetailsPage(orderModel,model)));
         },
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),

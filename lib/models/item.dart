@@ -4,6 +4,7 @@ class Item {
   final String description;
   final String name;
   final String restaurantName;
+  final String restaurantId;
   final double price;
   final bool menuStatus;
   int quantity =1;
@@ -14,6 +15,7 @@ class Item {
     required this.description,
     required this.name,
     required this.restaurantName,
+    required this.restaurantId,
     required this.price,
     required this.menuStatus,
     required this.quantity,

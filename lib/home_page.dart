@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gebeta_food/Screens/widgets/others/logo.dart';
+import 'package:gebeta_food/scoped-models/main.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import 'constants.dart';
 
@@ -55,10 +58,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(15)),
               ),
-              child: InkWell(
-                onTap: (){
+              child: ScopedModelDescendant<MainModel>(builder: (context, Widget child ,MainModel model){
+                return InkWell(
+                onTap: ()async{
+                  // model.obtainPlacesDirectionDetails(await model.getRestaurantLocation("611a2969aa2f6b4956fed445"), await model.getUserLocation("61389c87b84a60874819ecd9"));
+                  // model.obtainPlaceName(model.getUserLocation("61389c87b84a60874819ecd9"));
+                  
                   Navigator.pushNamed(context, '/login');
                   print("Log in clicked");
+                  
                 },
                 child: Center(
                   child: Text("Log In", style: TextStyle(
@@ -67,7 +75,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontSize: 15,
                   ),),
                 ),
-              ),
+              );
+              })
             ),
         ],
       )

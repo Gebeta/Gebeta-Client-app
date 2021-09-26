@@ -1,14 +1,18 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gebeta_food/Screens/home_screen/landing_page.dart';
 import 'package:gebeta_food/constants.dart';
+import 'package:gebeta_food/scoped-models/main.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class AddProfilePicScreen extends StatefulWidget {
   final String name;
-  const AddProfilePicScreen(this.name);
+  final String id;
+  const AddProfilePicScreen(this.name, this.id);
 
   @override
   _AddProfilePicScreenState createState() => _AddProfilePicScreenState();
@@ -107,7 +111,7 @@ class _AddProfilePicScreenState extends State<AddProfilePicScreen> {
                 height: 15,
               ),
               Text(
-                latitude.toString() +' , ' + longtiude.toString(),
+                latitude.toString() + ' , ' + longtiude.toString(),
                 style: TextStyle(
                   color: gsecondaryColor,
                   fontSize: 15,
@@ -120,55 +124,57 @@ class _AddProfilePicScreenState extends State<AddProfilePicScreen> {
                   fontSize: 15,
                 ),
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               TextButton(
                 onPressed: () {
                   getCurrentLocation();
                 },
                 style: TextButton.styleFrom(
                   primary: Colors.white,
-                  padding: EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   backgroundColor: Colors.blue,
                   onSurface: Colors.grey,
                 ),
-                child: Text("Choose"),
+                child: Text("Get Location"),
               )
             ],
           ),
-          Container(
-            margin: EdgeInsets.only(top:50),
-            width: MediaQuery.of(context).size.width * 0.3,
-            height: 50,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [gsecondaryColor, gPrimaryColor],
-                stops: [0, 1],
-              ),
-              borderRadius: BorderRadius.all(
-                Radius.circular(15),
-              ),
-            ),
-            child: InkWell(
-              onTap: () {
-                // Navigator.pushNamed(context, '/signup');
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //       builder: (context) => ()),
-                // );
-                Navigator.pushReplacementNamed(context, '/selectTopics');
-              },
-              child: Center(
-                child: Text(
-                  "Next",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 15),
+          ScopedModelDescendant(
+              builder: (context, Widget child, MainModel model) {
+            return Container(
+              margin: EdgeInsets.only(top: 50),
+              width: MediaQuery.of(context).size.width * 0.3,
+              height: 50,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [gsecondaryColor, gPrimaryColor],
+                  stops: [0, 1],
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(15),
                 ),
               ),
-            ),
-          ),
+              child: InkWell(
+                onTap: () {
+                  model.addProfilePicture(File(imagePath), latitude, longtiude, widget.id);
+                  Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SelectTopicsPage(widget.id)));
+                  
+                },
+                child: Center(
+                  child: Text(
+                    "Next",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15),
+                  ),
+                ),
+              ),
+            );
+          })
         ],
       ),
     );
@@ -236,7 +242,7 @@ class _AddProfilePicScreenState extends State<AddProfilePicScreen> {
     // return({"featureName":first.featureName,"addresLine":first.addressLine});
 
     setState(() {
-      latitude =coordinates.latitude;
+      latitude = coordinates.latitude;
       longtiude = coordinates.longitude;
       myLocation = first.addressLine;
     });

@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:gebeta_food/constants.dart';
+import 'package:gebeta_food/scoped-models/main.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
-class SelectTopicsPage extends StatelessWidget {
-  const SelectTopicsPage({Key? key}) : super(key: key);
+class SelectTopicsPage extends StatefulWidget {
+  final String id;
+  const SelectTopicsPage(this.id);
 
+  @override
+  _SelectTopicsPageState createState() => _SelectTopicsPageState();
+}
+
+class _SelectTopicsPageState extends State<SelectTopicsPage> {
+  double _value = 40;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,8 +23,34 @@ class SelectTopicsPage extends StatelessWidget {
         // ),
         body: ListView(
       children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            "Choose Price Interval of your interest",
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ),
+        SfSlider(
+          min: 0,
+          max: 200,
+          value: _value,
+          interval: 40,
+          showTicks: true,
+          showLabels: true,
+          enableTooltip: true,
+          minorTicksPerInterval: 1,
+          onChanged: (dynamic value) {
+            setState(() {
+              _value = value;
+            });
+          },
+        ),
         Container(
-          child: FilterChipWidget(),
+          padding: EdgeInsets.only(top: 15),
+          child: FilterChipWidget(_value, widget.id),
         ),
       ],
     ));
@@ -22,56 +58,27 @@ class SelectTopicsPage extends StatelessWidget {
 }
 
 class FilterChipWidget extends StatefulWidget {
+  final double value;
+  final String id;
+  FilterChipWidget(this.value, this.id);
+
   @override
   _FilterChipWidgetState createState() => _FilterChipWidgetState();
 }
 
 class _FilterChipWidgetState extends State<FilterChipWidget> {
+  List<String> selectedCategory = [];
   List<String> _options = [
-    'Burger',
-    'ertib',
-    'kitfo',
-    'tibes',
-    'raw meat',
-    'shiro',
-    'doro',
-    'fruits',
-    'juices',
-    'Pizza',
+    'Injera',
+    'Vegetable',
+    'Meat',
+    'Western',
     'Traditional',
-    'steak',
-    'fish',
-    'milkshake',
-    'Korean',
-    'Japanise',
-    'Mexican',
-    'Chicken',
-    'italian',
-    'traditional coffee',
-    'Coffee',
+    'Spicy',
+    'Juice',
+    'Fish',
     'Bevereges',
-    'Snacks and siders',
-    'desserts',
-    'salads',
-    'indian',
-    'icecream',
-    'cakes',
-    'Barbecue',
-    'Tacos',
-    'sandwiches',
-    'Noodles'
-        'waffles',
-    'pancakes',
-    'macchiato',
-    'hot dog',
-    'meatloaf',
-    'macaroni and cheese',
-    'spaghetti',
-    'meatballs',
-    'salmon',
-    'Grill',
-    'combo',
-    'shawarma'
+    'Sandwiches',
   ];
   List<bool> _selected = [
     false,
@@ -84,44 +91,9 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
     false,
     false,
     false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
   ];
 
-  Widget _buildChips() {
+  Widget _buildChips(_value) {
     List<Padding> chips = [];
 
     for (int i = 0; i < _options.length; i++) {
@@ -135,9 +107,19 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
         selectedColor: gPrimaryColor,
         showCheckmark: false,
         onSelected: (bool isSelected) {
+          // print("isSelected");
+          // print(isSelected);
           setState(() {
-            _selected[i] = isSelected;
+            if (isSelected) {
+              selectedCategory.add(_options[i]);
+              _selected[i] = isSelected;
+            } else {
+              selectedCategory.remove(_options[i]);
+              _selected[i] = isSelected;
+            }
           });
+
+          print(selectedCategory);
         },
       );
       chips.add(
@@ -162,20 +144,24 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: _buildButton(_selected),
-            ),
           ],
         ),
         Wrap(
           children: chips,
         ),
+        Padding(
+          padding: const EdgeInsets.only(right: 10, top: 25),
+          child: ScopedModelDescendant(
+              builder: (context, Widget child, MainModel model) {
+            return _buildButton(
+                selectedCategory, widget.id, _value, model.addCategory);
+          }),
+        ),
       ],
     );
   }
 
-  Widget _buildButton(List<bool> list) {
+  Widget _buildButton(List<String> list, id, price, Function addCategory) {
     int number = 0;
     for (int i = 0; i < _selected.length; i++) {
       if (_selected[i] == true) {
@@ -184,7 +170,8 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
     }
     if (number >= 3) {
       return ElevatedButton.icon(
-        onPressed: () {
+        onPressed: () async {
+          var response = await addCategory(list, price, id);
           Navigator.pushReplacementNamed(context, '/home');
         },
         style: ElevatedButton.styleFrom(
@@ -203,6 +190,6 @@ class _FilterChipWidgetState extends State<FilterChipWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return _buildChips();
+    return _buildChips(widget.value);
   }
 }

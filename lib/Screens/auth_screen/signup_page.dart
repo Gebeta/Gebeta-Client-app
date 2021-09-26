@@ -238,21 +238,19 @@ class _SignUpPageState extends State<SignUpPage> {
     }
     _formKey.currentState!.save();
     final Map<String, dynamic> response = await signup(
-        "145",
         _formData['first_name'],
         _formData['last_name'],
-        "eyael",
         _formData['password'],
         _formData['email'],
-        widget.phoneNo,
-        "Summit");
+        widget.phoneNo,);
     print("response data " + response['success'].toString());
+    print(response['id']);
     if (response['success']) {
       Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => new AddProfilePicScreen(
-                  _formData['first_name'],
+                  _formData['first_name'],response['id']
                 )),
       );
     } else {

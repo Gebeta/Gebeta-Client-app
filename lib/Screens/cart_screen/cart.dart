@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:gebeta_food/Screens/cart_screen/cart_card.dart';
+import 'package:gebeta_food/Screens/cart_screen/map_routes.dart';
 import 'package:gebeta_food/Screens/payment/payment.dart';
 import 'package:gebeta_food/constants.dart';
 import 'package:gebeta_food/models/cart.dart';
+import 'package:gebeta_food/models/profile.dart';
+import 'package:gebeta_food/models/restaurant.dart';
 import 'package:gebeta_food/scoped-models/main.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class MyCartPage extends StatefulWidget {
   final MainModel model;
-  const MyCartPage(this.model);
+  MyCartPage(
+    this.model,
+  );
+  final Key _mapKey = UniqueKey();
 
   @override
   _MyCartPageState createState() => _MyCartPageState();
@@ -17,6 +24,7 @@ class MyCartPage extends StatefulWidget {
 class _MyCartPageState extends State<MyCartPage> {
   // int count = 1;
   double totalAmount = 0.0;
+  String restaurantId = "";
 
   @override
   void initState() {
@@ -24,13 +32,18 @@ class _MyCartPageState extends State<MyCartPage> {
     super.initState();
     totalAmount = 0.0;
     widget.model.getCartList;
+
+    widget.model.getRestaurants();
+    List<Restaurant> restaurants = widget.model.displayRestaurants;
+    print("totalPrice(widget.model)");
+    print(widget.model.getCartList);
     totalPrice(widget.model);
     // widget.model.totalPrice(widget.model.getCartList);
   }
 
   @override
   Widget build(BuildContext context) {
-    double shippingPrice = 200.0;
+    // double shippingPrice = 200.0;
     return Scaffold(
       backgroundColor: Color(0xfff9efeb),
       appBar: AppBar(
@@ -49,7 +62,7 @@ class _MyCartPageState extends State<MyCartPage> {
             children: [
               _builtDeliveryWidget(),
               _buildCartList(widget.model.getCartList),
-              Container(
+              widget.model.getCartList.length == 0 ? Container():Container(
                 decoration: BoxDecoration(
                     color: whiteColor,
                     borderRadius: BorderRadius.circular(10.0)),
@@ -58,6 +71,7 @@ class _MyCartPageState extends State<MyCartPage> {
                 child: Column(
                   children: [
                     // Text("sub total")
+
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Row(
@@ -76,42 +90,55 @@ class _MyCartPageState extends State<MyCartPage> {
                         ],
                       ),
                     ),
+                  
                     Padding(
                       padding: const EdgeInsets.only(top: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Shipping",
-                            style:
-                                TextStyle(fontSize: 19, color: gTextLightColor),
-                          ),
-                          Text(
-                            shippingPrice.toString(),
-                            style:
-                                TextStyle(fontSize: 16, color: gTextLightColor),
-                          )
-                        ],
-                      ),
+                      child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => new MapRoutesScreen(
+                                        restaurantId, widget.model,totalAmount)));
+                          },
+                          child: Text("See Route")),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Total",
-                            style:
-                                TextStyle(fontSize: 19, color: gTextLightColor),
-                          ),
-                          Text(
-                            (totalAmount + shippingPrice).toString(),
-                            style:
-                                TextStyle(fontSize: 16, color: gTextLightColor),
-                          )
-                        ],
-                      ),
-                    )
+                    // Padding(
+                    //   padding: const EdgeInsets.only(top: 8.0),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: [
+                    //       Text(
+                    //         "Shipping",
+                    //         style:
+                    //             TextStyle(fontSize: 19, color: gTextLightColor),
+                    //       ),
+                    //       Text(
+                    //         shippingPrice.toString(),
+                    //         style:
+                    //             TextStyle(fontSize: 16, color: gTextLightColor),
+                    //       )
+                    //     ],
+                    //   ),
+                    // ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(top: 8.0),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //     children: [
+                    //       Text(
+                    //         "Total",
+                    //         style:
+                    //             TextStyle(fontSize: 19, color: gTextLightColor),
+                    //       ),
+                    //       Text(
+                    //         totalAmount.toString(),
+                    //         style:
+                    //             TextStyle(fontSize: 16, color: gTextLightColor),
+                    //       )
+                    //     ],
+                    //   ),
+                    // )
                     // _buildRow("Sub Total", totalAmount),
                     // _buildRow("Shipping", shippingPrice),
                     // _buildRow("Total", totalAmount + shippingPrice),
@@ -125,34 +152,40 @@ class _MyCartPageState extends State<MyCartPage> {
           )
         ],
       ),
-      bottomSheet: Container(
-          height: 60.0,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(color: gsecondaryColor, boxShadow: [
-            BoxShadow(
-                color: Colors.black26, offset: Offset(0, -1), blurRadius: 6.0)
-          ]),
-          child: ScopedModelDescendant(
-              builder: (context, Widget child, MainModel model) {
-            return TextButton(
-              onPressed: () {
-                model.createOrder("", "611a2969aa2f6b4956fed445", model.getUser.id, totalAmount + shippingPrice,
-                    widget.model.getCartList);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => new PaymentOptions()));
-              },
-              child: Text(
-                "Checkout",
-                style: TextStyle(
-                    color: whiteColor,
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2.0),
-              ),
-            );
-          })),
+      // bottomSheet: Container(
+      //     height: 60.0,
+      //     width: MediaQuery.of(context).size.width,
+      //     decoration: BoxDecoration(color: gsecondaryColor, boxShadow: [
+      //       BoxShadow(
+      //           color: Colors.black26, offset: Offset(0, -1), blurRadius: 6.0)
+      //     ]),
+      //     child: ScopedModelDescendant(
+      //         builder: (context, Widget child, MainModel model) {
+      //       return TextButton(
+      //         onPressed: () {
+      //           setState(() {
+      //             restaurantId = widget.model.getCartList[0].restaurantId;
+      //           });
+      //           model.createOrder(
+      //               restaurantId,
+      //               model.getUser.id,
+      //               totalAmount + shippingPrice,
+      //               widget.model.getCartList);
+      //           Navigator.push(
+      //               context,
+      //               MaterialPageRoute(
+      //                   builder: (context) => new PaymentOptions()));
+      //         },
+      //         child: Text(
+      //           "Checkout",
+      //           style: TextStyle(
+      //               color: whiteColor,
+      //               fontSize: 22.0,
+      //               fontWeight: FontWeight.bold,
+      //               letterSpacing: 2.0),
+      //         ),
+      //       );
+      //     })),
     );
   }
 
@@ -220,7 +253,9 @@ class _MyCartPageState extends State<MyCartPage> {
           ),
         ),
         TextButton(
-            onPressed: () {},
+            onPressed: () {
+              // display maps
+            },
             child: Text(
               "Choose Location ",
               style: TextStyle(color: gsecondaryColor),
@@ -242,7 +277,7 @@ class _MyCartPageState extends State<MyCartPage> {
   }
 
   Widget buildCartCard(cartIndex) {
-    return ScopedModelDescendant<MainModel>(
+    return ScopedModelDescendant(
       builder: (context, Widget child, MainModel model) {
         Cart cartItem = model.getCartList[cartIndex];
         return Container(
@@ -272,10 +307,12 @@ class _MyCartPageState extends State<MyCartPage> {
                                               });
                                               model.removeFromCart(cartIndex);
                                               Navigator.pop(context);
+                                              Navigator.pop(context);
                                             },
                                             child: Text("Yes")),
                                         TextButton(
                                             onPressed: () {
+                                              Navigator.pop(context);
                                               Navigator.pop(context);
                                             },
                                             child: Text("No"))

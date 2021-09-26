@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:gebeta_food/models/order.dart';
+import 'package:gebeta_food/scoped-models/main.dart';
 
 class OrderDetailsPage extends StatefulWidget {
   final Order order;
-  OrderDetailsPage(this.order);
+  final MainModel model;
+  OrderDetailsPage(this.order, this.model);
 
   @override
   _OrderDetailsPageState createState() => _OrderDetailsPageState();
 }
 
 class _OrderDetailsPageState extends State<OrderDetailsPage> {
+  String name = "";
+
+  getLocation() async {
+    name = await widget.model.getUserLocation(widget.model.getUser.id);
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    getLocation();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,60 +51,58 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                 fontSize: 24,
               ),
             ),
-            
             DataTable(
               columns: [
                 DataColumn(label: Text("Item")),
                 DataColumn(label: Text("Quantity")),
                 DataColumn(label: Text("Total"))
               ],
-              rows:
-                  
-                  widget.order.items
-                      .map((item) => DataRow(cells: [
-                            DataCell(Text(item['_id']['foodName'])),
-                            DataCell(Text(item['quantity'].toString())),
-                            DataCell(Text(item['_id']['price'].toString())),
-                          ]))
-                      .toList(),
-                      
-                      
+              rows: widget.order.items
+                  .map((item) => DataRow(cells: [
+                        DataCell(Text(item['_id']['foodName'])),
+                        DataCell(Text(item['quantity'].toString())),
+                        DataCell(Text(item['_id']['price'].toString())),
+                      ]))
+                  .toList(),
             ),
-             Row(
-               mainAxisAlignment: MainAxisAlignment.end,
-               children: [
-                 Text("Sub Total"),
-                 Padding(
-                   padding: const EdgeInsets.only(left: 16.0),
-                   child: Text(widget.order.totalPrice.toString()+" ETB"),
-                 ),
-               ],
-             ),
-             Row(
-               mainAxisAlignment: MainAxisAlignment.end,
-               children: [
-                 Text("Delivery Fee"),
-                 Padding(
-                   padding: const EdgeInsets.only(left: 16.0),
-                   child: Text(widget.order.shippingFee.toString()+" ETB"),
-                 ),
-               ],
-             ),
-             Row(
-               mainAxisAlignment: MainAxisAlignment.end,
-               children: [
-                 Text("Grand Total"),
-                 Padding(
-                   padding: const EdgeInsets.only(left: 16.0),
-                   child: Text((widget.order.totalPrice + widget.order.shippingFee).toString()+" ETB"),
-                 ),
-               ],
-             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text("Sub Total"),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Text(widget.order.totalPrice.toString() + " ETB"),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text("Delivery Fee"),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Text(widget.order.shippingFee.toString() + " ETB"),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text("Grand Total"),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Text(
+                      (widget.order.totalPrice + widget.order.shippingFee)
+                              .toString() +
+                          " ETB"),
+                ),
+              ],
+            ),
             Container(
               child: Column(
                 children: [
                   Text("Delivered to:- "),
-                  Text("//retrive location here")
+                  Text("")
                 ],
               ),
             ),
@@ -105,7 +116,6 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
               ),
             )
           ],
-
         ),
       ),
     );
