@@ -4,6 +4,7 @@ class Order {
   final int id;
   final String restaurantId;
   final String clientId;
+  final String driverId;
   final String clientName;
   final double totalPrice;
   final double shippingFee;
@@ -16,6 +17,7 @@ class Order {
     required this.id,
     required this.restaurantId,
     required this.clientId,
+    required this.driverId,
     required this.clientName,
     required this.totalPrice,
     required this.shippingFee,
@@ -24,3 +26,4 @@ class Order {
     required this.items,
   });
 }
+

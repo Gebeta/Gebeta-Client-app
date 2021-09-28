@@ -80,7 +80,7 @@ class RestaurantCard extends StatelessWidget {
                                       : Colors.red.withOpacity(0.65),
                                   borderRadius: BorderRadius.circular(4)),
                               child: Text(
-                                restaurantModel.isApproved ? "Open" : "Closed",
+                                restaurantModel.status ? "Open" : "Closed",
                                 style: TextStyle(color: whiteColor),
                               ),
                             )

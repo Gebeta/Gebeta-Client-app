@@ -63,10 +63,10 @@ class FoodCard extends StatelessWidget {
               ),
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 15.0),
+                  padding: EdgeInsets.only(left: 0.0),
                   child: Text(
                       '${itemModel.price.toString()} ETB',
                     style: TextStyle(
@@ -75,14 +75,14 @@ class FoodCard extends StatelessWidget {
                         fontWeight: FontWeight.bold),
                   ),
                 ),
-                IconButton(
-                  onPressed: () {
+                // IconButton(
+                //   onPressed: () {
                     
-                  },
-                  icon: Icon(Icons.add_circle),
-                  color: gsecondaryColor,
-                  iconSize: 35,
-                ),
+                //   },
+                //   icon: Icon(Icons.add_circle),
+                //   color: gsecondaryColor,
+                //   iconSize: 35,
+                // ),
               ],
             ),
           ],

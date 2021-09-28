@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gebeta_food/scoped-models/main.dart';
 
 class OrderScreen extends StatelessWidget {
-  const OrderScreen({ Key? key }) : super(key: key);
+  final MainModel model;
+  OrderScreen(this.model);
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +13,12 @@ class OrderScreen extends StatelessWidget {
           Navigator.pop(context);
          },),
         centerTitle: true,
-        title: Text("Order Details"),
+        title: Text("My Orders"),
+      ),
+      body: ListView(
+        children: [
+          
+        ],
       ),
     );
   }

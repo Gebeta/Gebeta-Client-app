@@ -28,6 +28,11 @@ mixin AllModels on Model {
   List<Rating> _ratings = [];
   late Profile profile;
   User _authenticatedUser = User(id: "", email: "", token: "");
+  bool _isLoading = false;
+
+  bool get isLoading {
+    return _isLoading;
+  }
 
   Restaurant restaurant = Restaurant(
     id: "",
@@ -374,6 +379,10 @@ mixin ItemModel on AllModels {
     });
   }
 
+  checkAvailability(id) {
+    Uri url = Uri.parse("$baseUrl/items");
+  }
+
   Future<Null> fetchItemsByRestaurant(id) {
     // print(id);
     Uri url = Uri.parse("$baseUrl/items");
@@ -531,7 +540,12 @@ mixin OrderModel on AllModels {
     return {'success': !hasError, 'message': message};
   }
 
-  getActiveOrders() async {
+  getActiveOrders({reload}) async {
+    if (reload == true) {
+      _isLoading = false;
+    } else {
+      _isLoading = true;
+    }
     Uri url = Uri.parse("$baseUrl/order/activeorders");
     return http.get(url).then((http.Response response) {
       final List<Order> fetchedOrders = [];
@@ -542,6 +556,7 @@ mixin OrderModel on AllModels {
       orderList.forEach((dynamic data) {
         Order order = Order(
           id: data['id'],
+          driverId: data['driverId'],
           restaurantId: data['restaurant_id']['name'],
           clientId: data['client_id']['_id'],
           clientName: data['client_id']['first_name'] +
@@ -550,7 +565,7 @@ mixin OrderModel on AllModels {
           totalPrice: data['totalPrice'].toDouble(),
           shippingFee: data["deliveryfee"].toDouble(),
           isAcitive: data['isAcitive'],
-          status:data['status'],
+          status: data['status'],
           items: data['items'],
         );
 
@@ -560,7 +575,39 @@ mixin OrderModel on AllModels {
         return order.clientId == _authenticatedUser.id;
       }).toList();
       // print("OLA id ");
-      // print(fetchedOrders[0].date);
+      // print(fetchedOrders[0].clientName);
+      notifyListeners();
+    });
+  }
+
+  getAllOrders() async{
+    Uri url = Uri.parse("$baseUrl/order");
+    return http.get(url).then((http.Response response) {
+      final List<Order> fetchedOrders = [];
+
+      final List<dynamic> orderList = json.decode(response.body);
+      print(orderList);
+      orderList.forEach((dynamic data) {
+        Order order = Order(
+          id: data['id'],
+          driverId: data['driverId'],
+          restaurantId: data['restaurant_id']['name'],
+          clientId: data['client_id']['_id'],
+          clientName: data['client_id']['first_name'] +
+              " " +
+              data['client_id']['last_name'],
+          totalPrice: data['totalPrice'].toDouble(),
+          shippingFee: data["deliveryfee"].toDouble(),
+          isAcitive: data['isAcitive'],
+          status: data['status'],
+          items: data['items'],
+        );
+        fetchedOrders.add(order);
+      });
+      _order = fetchedOrders.where((Order order) {
+        return order.clientId == _authenticatedUser.id;
+      }).toList();
+      print("OLA id " + fetchedOrders.length.toString());
       notifyListeners();
     });
   }
@@ -575,6 +622,7 @@ mixin OrderModel on AllModels {
       orderList.forEach((dynamic data) {
         Order order = Order(
           id: data['id'],
+          driverId: data['driverId'],
           restaurantId: data['restaurant_id']['name'],
           clientId: data['client_id']['_id'],
           clientName: data['client_id']['first_name'] +
@@ -583,7 +631,7 @@ mixin OrderModel on AllModels {
           totalPrice: data['totalPrice'].toDouble(),
           shippingFee: data["deliveryfee"].toDouble(),
           isAcitive: data['isAcitive'],
-          status:data['status'],
+          status: data['status'],
           items: data['items'],
         );
         fetchedOrders.add(order);
@@ -618,6 +666,20 @@ mixin OrderModel on AllModels {
 
     String jsonrRestaurant = jsonEncode(restaurantAddress);
     print("restaurant");
+    print(jsonrRestaurant);
+    return jsonrRestaurant;
+  }
+
+  getDriverLocation(String id) async {
+    Uri url = Uri.parse("$baseUrl/driver/$id");
+    http.Response response = await http.get(url);
+    final List<dynamic> responseData = json.decode(response.body);
+
+    var addressJson = jsonDecode(responseData[0]['address']);
+    Address restaurantAddress = Address(addressJson["lat"], addressJson["lng"]);
+
+    String jsonrRestaurant = jsonEncode(restaurantAddress);
+    print("Driver");
     print(jsonrRestaurant);
     return jsonrRestaurant;
   }

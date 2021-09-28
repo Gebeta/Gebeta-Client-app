@@ -75,19 +75,85 @@ class _FinalCartState extends State<FinalCart> {
         child: ScopedModelDescendant(
             builder: (context, Widget child, MainModel model) {
           return TextButton(
-            onPressed: () async{
+            onPressed: () async {
               // Navigator.push(context,
               //     MaterialPageRoute(builder: (context) => PaymentOptions(_carts,widget.deliveryFee)));
-              final Map<String, dynamic> response = await model.createOrder(_carts[0].restaurantId, widget.totalAmount,
-                  double.parse(widget.deliveryFee.toStringAsFixed(2)), _carts);
-                  print("DateTime.now()");
-                  // print(Timestamp.ftomDate(DateTime.now()));
-                  if (response['success']) {
-                    Navigator.pushReplacementNamed(context, "/home");
-                    Fluttertoast.showToast(msg: response['message'] + "Wait a little until the restaurant accept your order");
-                   model.resetCart();
-                  }
-                  
+              // showDialog(context: context, builder: (context)=>{
+              //   return
+              // })
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Make your Payment Using Stripe'),
+                      content: SingleChildScrollView(
+                        child: ListBody(
+                          children: <Widget>[
+                            TextFormField(
+                              style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w600,
+                                  color: gPrimaryColor),
+                              decoration: InputDecoration(
+                                hintText: "4242424242424242",
+                                labelText: "Credit Card ",
+                                labelStyle: TextStyle(
+                                    color: gPrimaryColor,
+                                    fontWeight: FontWeight.w600),
+                                hintStyle: TextStyle(
+                                    color: gPrimaryColor,
+                                    fontWeight: FontWeight.w100),
+                              ),
+                              validator: (value) {
+                                if (value.toString().isEmpty ||
+                                    value.toString().length < 16) {
+                                  return 'please Enter a valid Number';
+                                }
+                                if (value.toString() != "4242424242424242") {
+                                  return 'for development only, use 4242424242424242';
+                                }
+                              },
+                            ),
+                            Text("Amount: " + widget.totalAmount.toString()),
+                            Text('please Enter a valid Number'),
+                          ],
+                        ),
+                      ),
+                      actions: [
+                        TextButton(
+                            onPressed: () async {
+                              final Map<String, dynamic> response =
+                                  await model.createOrder(
+                                      _carts[0].restaurantId,
+                                      widget.totalAmount,
+                                      double.parse(widget.deliveryFee
+                                          .toStringAsFixed(2)),
+                                      _carts);
+                              if (response['success']) {
+                                Fluttertoast.showToast(
+                                    msg: response['message'] +
+                                        "Wait a little until the restaurant accept your order");
+                                model.resetCart();
+                                Navigator.pop(context);
+                                Navigator.pushReplacementNamed(
+                                    context, "/home");
+                              }
+
+                              Navigator.pop(context);
+                            },
+                            child: Text("Pay")),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(
+                                  context, "/my_cart");
+                              Fluttertoast.showToast(
+                                  msg: "You have canceled the transaction");
+                            },
+                            child: Text("Cancel"))
+                      ],
+                    );
+                  });
+
               // PaymentOptions
             },
             child: Text(

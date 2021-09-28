@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gebeta_food/Screens/orders/track_order.dart';
 import 'package:gebeta_food/constants.dart';
 import 'package:gebeta_food/models/order.dart';
 import 'package:gebeta_food/scoped-models/main.dart';
@@ -125,34 +126,12 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   Widget createButton(status) {
     Widget button;
 
-    if (status == 'pending') {
-      button = ElevatedButton(
-        child: Text("Cancel"),
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          primary: gPrimaryColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-      );
-    } else if (status == "accepted") {
-      button = ElevatedButton(
-        child: Text("Make Payment"),
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          primary: gPrimaryColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-      );
-    } else if (status == "paid") {
-      button = Text("");
-    } else if (status == "assigned") {
+   if (status == "assigned") {
       button = ElevatedButton(
         child: Text("Track Order"),
-        onPressed: () {},
+        onPressed: () {
+          TrackOrderScreen(widget.order.driverId,widget.model,);
+        },
         style: ElevatedButton.styleFrom(
           primary: gPrimaryColor,
           shape: RoundedRectangleBorder(

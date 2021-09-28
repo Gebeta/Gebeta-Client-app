@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gebeta_food/Screens/orders/orders.dart';
+import 'package:gebeta_food/Screens/orders/pending_orders.dart';
 import 'package:gebeta_food/Screens/user_profile/change_password.dart';
 import 'package:gebeta_food/constants.dart';
 import 'package:gebeta_food/models/profile.dart';
@@ -7,7 +7,7 @@ import 'package:gebeta_food/scoped-models/main.dart';
 
 class ProfileScreen extends StatefulWidget {
   final MainModel model;
-  Profile profile;
+  final Profile profile;
   ProfileScreen(this.model, this.profile);
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
@@ -230,7 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              AllOrdersScreen(widget.model)));
+                              PendingOrder(widget.model)));
                 } else if (name == "Notification") {
                 } else if (name == "Language") {
                 } else if (name == "Invite Friends") {

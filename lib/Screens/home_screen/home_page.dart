@@ -100,19 +100,30 @@ class _MyHomePageState extends State<MyHomePage>
                     ),
                     title: Text("Orders"),
                     onTap: () {
-                      Navigator.pushNamed(context, '/my_orders');
+                      Navigator.pushNamed(context, '/orders');
                     },
                   ),
                   ListTile(
                     leading: Icon(
-                      Icons.favorite_border,
+                      Icons.history_edu_outlined,
                       color: gsecondaryColor,
                     ),
-                    title: Text("Favorites"),
+                    title: Text("Completed Orders"),
                     onTap: () {
-                      Navigator.pushNamed(context, '/my_favorites');
+                      Navigator.pushNamed(context, '/completed_orders');
                     },
                   ),
+                  ListTile(
+                    leading: Icon(
+                      Icons.history_edu_outlined,
+                      color: gsecondaryColor,
+                    ),
+                    title: Text("Pending Orders"),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/pending_orders');
+                    },
+                  ),
+                  
                   ListTile(
                     leading: Icon(
                       Icons.restaurant_outlined,
@@ -194,16 +205,19 @@ class _MyHomePageState extends State<MyHomePage>
           style: TextStyle(fontWeight: FontWeight.w400, fontSize: 25),
         ),
         actions: [
-          Row(children: [
-            IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/my_cart');
-                print("clicked");
-              },
-              icon: Icon(Icons.shopping_cart_outlined)),
-              widget.model.getCartList.length >= 1 ?Text("(${ widget.model.getCartList.length})"): Text("")
-          ],),
-          
+          Row(
+            children: [
+              IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/my_cart');
+                    print("clicked");
+                  },
+                  icon: Icon(Icons.shopping_cart_outlined)),
+              widget.model.getCartList.length >= 1
+                  ? Text("(${widget.model.getCartList.length})")
+                  : Text("")
+            ],
+          ),
           SizedBox(
             width: 10,
           ),

@@ -22,21 +22,21 @@ class _ItemsState extends State<Items> {
     widget.model.fetchItems();
   }
 
-  Widget _buildPopularFoodList(List<Item> restaurants) {
-    Widget restaurantCards;
-    if (restaurants.length > 0) {
-      restaurantCards = ListView.builder(
+  Widget _buildPopularFoodList(List<Item> items) {
+    Widget itemCards;
+    if (items.length > 0) {
+      itemCards = ListView.builder(
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
         itemBuilder: (BuildContext context, int index) => FoodCard(index),
-        itemCount: restaurants.length,
+        itemCount: items.length,
       );
     } else {
-      restaurantCards = Container();
+      itemCards = Container();
     }
     return Container(
       height: 250,
-      child: restaurantCards,
+      child: itemCards,
     );
   }
 

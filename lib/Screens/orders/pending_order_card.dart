@@ -6,20 +6,20 @@ import 'package:gebeta_food/models/order.dart';
 import 'package:gebeta_food/scoped-models/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-class OrderCard extends StatefulWidget {
+class PendingOrderCard extends StatefulWidget {
   final int orderIndex;
-  const OrderCard(this.orderIndex);
+  const PendingOrderCard(this.orderIndex);
 
   @override
-  _OrderCardState createState() => _OrderCardState();
+  _PendingOrderCardState createState() => _PendingOrderCardState();
 }
 
-class _OrderCardState extends State<OrderCard> {
+class _PendingOrderCardState extends State<PendingOrderCard> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant(
         builder: (context, Widget child, MainModel model) {
-      Order orderModel = model.getOrderList[widget.orderIndex];
+      Order orderModel = model.getActiveOrderList[widget.orderIndex];
       return GestureDetector(
         onTap: () {
           Navigator.push(
